@@ -1,0 +1,127 @@
+---
+import '../styles/services.css';
+// EDITABLE: 8 service cards, titles, descriptions, icons and URLs.
+const services = [
+  { title: 'Mantenimiento Industrial Integral', description: 'Soluciones correctivas y preventivas para maximizar la continuidad operativa en plantas e instalaciones energéticas.', icon: '⚙', url: '/servicios/mantenimiento-industrial' },
+  { title: 'Instalación y Mantenimiento de Tuberías', description: 'Montaje, inspección y rehabilitación de ductos para la industria petrolera y de gas con estándares internacionales.', icon: '⌁', url: '/servicios/tuberias' },
+  { title: 'Soldadura Especializada y Alta Presión', description: 'Servicios de soldadura certificada para estructuras críticas, recipientes a presión y líneas de conducción.', icon: '✦', url: '/servicios/soldadura-especializada' },
+  { title: 'Construcción Civil y Estructural', description: 'Desarrollo de infraestructura industrial, cimentaciones profundas y montaje de estructuras de acero de gran escala.', icon: '▦', url: '/servicios/construccion-civil' },
+  { title: 'Ingeniería de Proyectos EPC', description: 'Diseño conceptual, básico y de detalle, procura y construcción llave en mano para el sector energético.', icon: '⌑', url: '/servicios/ingenieria-epc' },
+  { title: 'Servicios Anticorrosivos y Recubrimientos', description: 'Aplicación de sistemas de protección catódica y recubrimientos industriales para atmósferas agresivas.', icon: '◇', url: '/servicios/recubrimientos' },
+  { title: 'Instrumentación y Control de Procesos', description: 'Automatización, calibración y mantenimiento de sistemas de control para optimizar refinerías y plantas industriales.', icon: '⎋', url: '/servicios/instrumentacion-control' },
+  { title: 'Paradas de Planta y Mantenimiento Mayor', description: 'Planificación y ejecución ágil de trabajos críticos durante paros programados de operación industrial.', icon: '◷', url: '/servicios/mantenimiento-mayor' },
+];
+---
+
+<section class="services-radial" data-services-radial aria-labelledby="services-radial-title">
+  <div class="services-radial-pin" data-services-radial-pin>
+    <div class="services-radial-wipe" aria-hidden="true"></div>
+    <div class="services-stage" data-services-stage>
+      <div class="services-wheel-disc" data-services-wheel aria-hidden="true"></div>
+      <div class="services-radial-heading">
+        <p class="services-page-kicker">CAPACIDAD DIGITAL</p>
+        <!-- EDITABLE: Section Heading -->
+        <h2 style="color: #ea3221;" id="services-radial-title">Servicios</h2>
+        <h3 style="color: #07070a;">Soluciones creadas para impulsar cada etapa de tu negocio.</h3>
+      </div>
+      <div class="services-cards-orbit" data-services-cards>
+      {services.map((service) => (
+        <article class="service-radial-card" data-service-card>
+          <div class="service-radial-card-head">
+            <div class="service-radial-icon" aria-hidden="true"><span>{service.icon}</span></div>
+          </div>
+          <h3>{service.title}</h3>
+          <p class="service-radial-description">{service.description}</p>
+          <a class="sr-only-link" href={service.url}>Ver servicio: {service.title}</a>
+        </article>
+      ))}
+      </div>
+      <nav class="services-radial-navigation" aria-label="Navegación del carrusel de servicios">
+        <button type="button" data-services-previous aria-label="Mostrar servicio anterior"><span aria-hidden="true">←</span> Anterior</button>
+        <button type="button" data-services-next aria-label="Mostrar servicio siguiente">Siguiente <span aria-hidden="true">→</span></button>
+      </nav>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+  const section = document.querySelector('[data-services-radial]');
+  const pin = document.querySelector('[data-services-radial-pin]');
+  const stage = document.querySelector('[data-services-stage]');
+  const wipe = document.querySelector('.services-radial-wipe');
+  const wheel = document.querySelector('[data-services-wheel]');
+  const cards = gsap.utils.toArray('[data-service-card]');
+  const previous = document.querySelector('[data-services-previous]');
+  const next = document.querySelector('[data-services-next]');
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const desktop = window.matchMedia('(min-width: 768px)').matches;
+
+  if (section && pin && stage && wipe && wheel && cards.length && !reduced && desktop) {
+    const step = 360 / cards.length;
+    const state = { rotation: 0 };
+    let activeIndex = 0;
+    let scrollTrigger;
+    const updateWheel = () => {
+      const radius = Math.min(window.innerWidth * 0.58, window.innerHeight * 0.9);
+      wheel.style.transform = `translate(-50%, -50%) rotate(${state.rotation}deg)`;
+      cards.forEach((card, index) => {
+        const angle = 90 + index * step + state.rotation;
+        const radians = angle * Math.PI / 180;
+        const x = Math.cos(radians) * radius;
+        const y = Math.sin(radians) * radius;
+        const distance = Math.abs((((angle - 90) % 360) + 540) % 360 - 180);
+        const focus = gsap.utils.clamp(0, 1, 1 - distance / 72);
+        gsap.set(card, {
+          x,
+          y,
+          xPercent: -50,
+          yPercent: -50,
+          opacity: 0.22 + focus * 0.78,
+          scale: 0.86 + focus * 0.16,
+          zIndex: Math.round(focus * 20),
+        });
+        card.classList.toggle('is-active', focus > 0.78);
+        if (focus > 0.78) activeIndex = index;
+      });
+      previous?.toggleAttribute('disabled', activeIndex === 0);
+      next?.toggleAttribute('disabled', activeIndex === cards.length - 1);
+    };
+
+    const timeline = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: 'top top',
+        end: 'bottom bottom',
+        pin,
+        pinSpacing: false,
+        scrub: 1,
+        invalidateOnRefresh: true,
+        onRefresh: updateWheel,
+      },
+    });
+
+    timeline
+      .to(wipe, { autoAlpha: 0, duration: 0.16, ease: 'power2.inOut' })
+      .fromTo(stage, { y: () => window.innerHeight * 0.72, autoAlpha: 0, filter: 'blur(7px)' }, { y: 0, autoAlpha: 1, filter: 'blur(0px)', duration: 0.28, ease: 'power2.out' }, '<0.04')
+      .to(state, { rotation: -step * (cards.length - 1), duration: 0.68, ease: 'none', onUpdate: updateWheel });
+
+    scrollTrigger = timeline.scrollTrigger;
+    const goToCard = (index) => {
+      if (!scrollTrigger) return;
+      const target = gsap.utils.clamp(0, cards.length - 1, index);
+      const progress = 0.32 + (target / (cards.length - 1)) * 0.68;
+      const destination = scrollTrigger.start + (scrollTrigger.end - scrollTrigger.start) * progress;
+      window.scrollTo({ top: destination, behavior: 'smooth' });
+    };
+
+    previous?.addEventListener('click', () => goToCard(activeIndex - 1));
+    next?.addEventListener('click', () => goToCard(activeIndex + 1));
+
+    window.addEventListener('resize', updateWheel);
+    updateWheel();
+  }
+</script>

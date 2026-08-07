@@ -1,0 +1,18 @@
+---
+// EDITABLE: Page navigation links data array
+const pages = [{ label: 'Proyectos', url: '#proyectos' }, { label: 'Servicios', url: '#servicios' }, { label: 'Nosotros', url: '#quienes-somos' }, { label: 'Contacto', url: '/contacto' }];
+// EDITABLE: Social media links data array
+const socials = [{ label: 'LinkedIn', url: '#' }, { label: 'Youtube', url: '#' }];
+// EDITABLE: Legal links data array
+const legal = [{ label: 'Aviso de Privacidad', url: '#' }, { label: 'Términos y Condiciones', url: '#' }, { label: 'Política de Cookies', url: '#' }];
+// EDITABLE: Main heading / contact button label and URL / email / physical address
+const heading = '¿TIENES UN PROYECTO EN MENTE? ¡HABLEMOS DE ELLO!';
+const contact = { label: 'Contáctanos', url: '/contacto' };
+const email = 'ventas@simico.mx';
+const address = 'Avenida Adolfo Ruiz Cortines s/n, Tabasco 2000, 86035 Villahermosa, Tab., México';
+const year = new Date().getFullYear();
+---
+<footer class="site-footer" aria-labelledby="footer-heading">
+  <div class="footer-main"><div class="footer-columns"><div class="footer-cta"><h2 id="footer-heading">{heading}</h2><a href={contact.url}>{contact.label}<span>↗</span></a></div><div class="footer-column"><h3>PÁGINAS</h3>{pages.map((link) => <a href={link.url}>{link.label}</a>)}</div><div class="footer-column"><h3>CORREO</h3><a href={`mailto:${email}`}>{email}</a></div><div class="footer-column"><h3>DIRECCIÓN</h3><address>{address}</address></div></div><div class="footer-mark"><img src="/simico_largo_dark.svg" alt="SIMICO" loading="lazy" decoding="async" /></div></div>
+  <div class="footer-sub"><span>© {year} SIMICO. Todos los derechos reservados.</span><div>{socials.map((link) => <a href={link.url}>{link.label}</a>)}</div><div>{legal.map((link) => <a href={link.url}>{link.label}</a>)}</div></div>
+</footer>

@@ -1,0 +1,90 @@
+---
+// EDITABLE: Header Logo String/Image
+const logo = '/simico_largo.svg';
+const currentPath = Astro.url.pathname.toLowerCase();
+const servicesHref = currentPath.startsWith('/servicios') ? '/servicios' : '#servicios';
+// EDITABLE: Header Navigation Links Array
+const links = [
+  { label: 'Inicio', href: '/Inicio', active: currentPath === '/' || currentPath.startsWith('/inicio') },
+  { label: 'Quiénes somos', href: '#quienes-somos' },
+  { label: 'Servicios', href: servicesHref, active: currentPath.startsWith('/servicios') },
+  { label: 'Proyectos', href: '#proyectos' },
+];
+// EDITABLE: Header CTA Label & URL
+const cta = { label: 'Contacto', href: '/contacto' };
+---
+
+<header class="site-header" data-header>
+  <div class="header-inner">
+    <a class="brand" href="/Inicio" aria-label="SIMICO, volver al inicio"><img src={logo} alt="SIMICO" /></a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation" data-menu-toggle>
+      <span></span><span></span><span></span><span class="sr-only">Abrir menú</span>
+    </button>
+    <nav id="primary-navigation" class="primary-nav" aria-label="Navegación principal" data-navigation>
+      <div class="nav-links">
+        {links.map((link) => <a class:list={{ active: link.active }} href={link.href}>{link.label}</a>)}
+      </div>
+      <a class="header-cta" href={cta.href}>{cta.label}</a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const header = document.querySelector('[data-header]');
+  const hero = document.querySelector('#inicio');
+  const statements = document.querySelector('[data-statements]');
+  const servicesPage = document.querySelector('.services-page');
+  const servicesHero = document.querySelector('.services-page-hero');
+  const servicesRadial = document.querySelector('[data-services-radial]');
+  const toggle = document.querySelector('[data-menu-toggle]');
+  const nav = document.querySelector('[data-navigation]');
+  let lastScrollY = window.scrollY;
+  const updateScroll = () => {
+    const currentScrollY = window.scrollY;
+    const scrollingUp = currentScrollY < lastScrollY;
+    const heroBottom = hero?.getBoundingClientRect().bottom ?? 0;
+    const statementsBottom = statements?.getBoundingClientRect().bottom ?? 0;
+    const inHero = currentScrollY < (hero?.offsetHeight ?? 0) - 2;
+    const inStatements = statements && heroBottom <= 1 && statementsBottom > 1;
+    const afterStatements = statements && statementsBottom <= 1;
+
+    if (servicesPage) {
+      const servicesHeroBottom = servicesHero?.getBoundingClientRect().bottom ?? 0;
+      const radialRect = servicesRadial?.getBoundingClientRect();
+      const inServicesHero = servicesHeroBottom > 1;
+      const inServicesRadial = Boolean(radialRect && radialRect.top <= 1 && radialRect.bottom > 1);
+
+      if (currentScrollY <= 12) {
+        header?.classList.remove('hide-header', 'scrolled');
+      } else if (inServicesRadial) {
+        header?.classList.add('hide-header');
+        header?.classList.remove('scrolled');
+      } else {
+        header?.classList.toggle('hide-header', !scrollingUp);
+        header?.classList.toggle('scrolled', scrollingUp && !inServicesHero);
+      }
+      lastScrollY = currentScrollY;
+      return;
+    }
+
+    if (inHero) {
+      header?.classList.remove('scrolled', 'statements-complete');
+      header?.classList.toggle('hide-header', currentScrollY > 12 && !scrollingUp);
+    } else if (inStatements) {
+      header?.classList.remove('scrolled', 'statements-complete');
+      header?.classList.add('hide-header');
+    } else if (afterStatements) {
+      header?.classList.toggle('scrolled', scrollingUp);
+      header?.classList.toggle('hide-header', !scrollingUp);
+      header?.classList.add('statements-complete');
+    }
+    lastScrollY = currentScrollY;
+  };
+  window.addEventListener('scroll', updateScroll, { passive: true });
+  updateScroll();
+  toggle?.addEventListener('click', () => {
+    const open = nav?.classList.toggle('open') ?? false;
+    toggle.setAttribute('aria-expanded', String(open));
+    document.body.classList.toggle('menu-open', open);
+  });
+</script>

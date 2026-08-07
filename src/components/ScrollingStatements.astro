@@ -1,0 +1,14 @@
+---
+// EDITABLE: Statement 1 - Prefix, Transition, Suffix
+// EDITABLE: Statement 2 - Prefix, Transition, Suffix
+// EDITABLE: Statement 3 - Prefix, Transition, Suffix
+const statements = [
+  { prefix: 'DONDE LOS MÉTODOS CONVENCIONALES', transition: 'ALCANZAN SU LÍMITE,', suffix: 'SIMICO TOMA EL CONTROL.' },
+  { prefix: 'SOLUCIONES INDUSTRIALES Y DE INGENIERÍA SIN', transition: 'COMPROMETER LA SEGURIDAD', suffix: 'NI LA EFICIENCIA.' },
+  { prefix: 'MÍNIMO TIEMPO DE INACTIVIDAD.', transition: 'CAPACIDAD OPERATIVA PARA', suffix: 'PROYECTOS DE ALTA COMPLEJIDAD.' },
+];
+---
+<section class="statements-track" data-statements data-fullscreen-text aria-label="Manifiesto SIMICO"><div class="statements-sticky"><div class="statements-content">{statements.map((s, i) => <h2 class:list={{statement:true,'statement-active':i===0}} data-statement><span>{s.prefix} </span><span class="statement-transition">{s.transition} </span><span class="statement-suffix">{s.suffix}</span></h2>)}</div><div class="statement-progress" data-progress></div></div></section>
+<script>
+const section=document.querySelector('[data-statements]'),items=[...document.querySelectorAll('[data-statement]')],progress=document.querySelector('[data-progress]'); const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;if(reduced)section?.classList.add('reduced-motion'); const render=()=>{if(!section||reduced)return;const p=Math.min(1,Math.max(0,-section.getBoundingClientRect().top/(section.clientHeight-innerHeight))),pos=p*items.length,intro=Math.min(1,Math.max(0,(p-.035)/.07));items.forEach((el,i)=>{const local=pos-i,active=i===Math.floor(pos),frameOpacity=active?Math.min(1,1-Math.max(0,local-.78)/.22):0;el.style.opacity=String(frameOpacity*intro);el.querySelector('.statement-transition').style.color=`rgba(255,255,255,${Math.min(1,Math.max(0,local*2.3))})`;el.querySelector('.statement-suffix').style.opacity=Math.min(1,Math.max(0,(local-.42)*2.3))});if(progress)progress.style.width=`${p*100}%`};if(!reduced){addEventListener('scroll',render,{passive:true});addEventListener('resize',render);render()}
+</script>

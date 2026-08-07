@@ -1,0 +1,43 @@
+---
+// EDITABLE: Intro Sequence Thumbnail Image 1-5
+const thumbnails = [
+  'src/assets/hero1.jpg',
+  'src/assets/hero2.jpg',
+  'src/assets/hero3.jpg',
+  'src/assets/hero4.jpg',
+  'src/assets/hero5.jpg',
+];
+// EDITABLE: Hero Eyebrow Text
+const eyebrow = 'DONDE LA INGENIERÍA ENCUENTRA LA OPERACIÓN';
+// EDITABLE: Hero Headline Text
+const headline = 'SERVICIOS TÉCNICOS E INDUSTRIALES ESPECIALIZADOS.';
+// EDITABLE: Hero CTA Label / URL
+const heroCta = { label: 'CONTACTAR AHORA', href: '/contacto' };
+---
+
+<section id="inicio" class="hero" aria-labelledby="hero-title" data-hero>
+  <div class="hero-background" data-background-gallery>{thumbnails.map((src, index) => <img class:list={{ 'is-background-active': index === 2 }} src={src} alt="" aria-hidden="true" data-background-image />)}<div class="video-overlay"></div></div>
+  <div class="intro-layer" data-intro><div class="thumb-grid">{thumbnails.map((src) => <img src={src} alt="" loading="eager" />)}</div></div>
+  <div class="hero-content">
+    <h2 class="eyebrow">{`${eyebrow}`}</h2>
+    <h1 id="hero-title">{headline}</h1>
+    <a class="hero-cta" href={heroCta.href}>{heroCta.label}<span aria-hidden="true">↗</span></a>
+  </div>
+</section>
+
+<script>
+  const intro = document.querySelector('[data-intro]');
+  window.setTimeout(() => intro?.classList.add('reveal'), 1000);
+  window.setTimeout(() => { intro?.classList.add('exit'); document.querySelector('[data-hero]')?.classList.add('background-ready'); }, 2000);
+  window.setTimeout(() => document.querySelector('.hero-content')?.classList.add('visible'), 2900);
+  const backgroundImages = [...document.querySelectorAll('[data-background-image]')];
+  let backgroundIndex = 2;
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    window.setInterval(() => {
+      if (!document.querySelector('[data-hero]')?.classList.contains('background-ready')) return;
+      backgroundImages[backgroundIndex]?.classList.remove('is-background-active');
+      backgroundIndex = (backgroundIndex + 1) % backgroundImages.length;
+      backgroundImages[backgroundIndex]?.classList.add('is-background-active');
+    }, 4500);
+  }
+</script>

@@ -1,0 +1,72 @@
+---
+import ProjectSlide from './ProjectSlide.astro';
+
+const projects = [
+  { title: 'Infraestructura Energética Norte', description: 'Diseñamos y ejecutamos infraestructura energética con ingeniería civil y montaje electromecánico de alta precisión. Cada etapa se desarrolla bajo estándares de seguridad ISO para asegurar continuidad operativa.', image: 'https://images.unsplash.com/photo-1513828583688-c52646db42da?auto=format&fit=crop&w=1400&q=85', link: '/proyectos/infraestructura-energetica-norte' },
+  { title: 'Mantenimiento de Ductos', description: 'Inspeccionamos y rehabilitamos ductos críticos para extender su vida útil y reducir riesgos operativos. El proyecto integra soldadura de alta presión, control técnico y renovación de válvulas.', image: 'https://images.unsplash.com/photo-1545235617-9465d2a55698?auto=format&fit=crop&w=1400&q=85', link: '/proyectos/mantenimiento-ductos' },
+  { title: 'Planta de Procesamiento', description: 'Integramos diseño estructural, instalación de tuberías y puesta en marcha para una planta lista para operar. La coordinación de cada especialidad permite avanzar con precisión y seguridad.', image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1400&q=85', link: '/proyectos/planta-procesamiento' },
+  { title: 'Expansión Industrial', description: 'Supervisamos la expansión de instalaciones industriales para mejorar su capacidad y desempeño. El trabajo combina optimización operativa, control de calidad y seguimiento cercano de obra.', image: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1400&q=85', link: '/proyectos/expansion-industrial' },
+];
+---
+
+<section id="proyectos" class="projects-new" data-projects-timeline aria-labelledby="projects-new-heading">
+  <div class="projects-pinned-frame" data-project-frame>
+    <div class="projects-grid" aria-hidden="true"></div>
+    <svg class="project-path" viewBox="0 0 1440 620" preserveAspectRatio="none" aria-hidden="true">
+      <path class="trajectory trajectory-muted" d="M-80 162 C270 28 440 358 780 204 S1100 92 1520 208" />
+      <path class="trajectory trajectory-active" d="M-80 330 C220 522 468 116 748 340 S1120 498 1520 276" />
+      <path class="trajectory trajectory-muted" d="M-80 488 C218 340 490 574 772 426 S1130 262 1520 430" />
+    </svg>
+    <div class="projects-statement" data-project-statement>
+      <p>CAPACIDAD OPERATIVA COMPROBADA</p>
+      <h2 id="projects-new-heading">Ingeniería que impulsa el sector petrolero.</h2>
+      <span>Soluciones y ejecución precisa para infraestructura crítica en el sur de México.</span>
+    </div>
+    <div class="projects-track" data-project-track>
+      {projects.map((project, index) => <ProjectSlide project={project} index={index} />)}
+      <article class="projects-end-card">
+        <p>SIMICO / PROYECTOS</p>
+        <h3>Construyamos el siguiente desafío.</h3>
+        <a href="/proyectos">Ver todos los proyectos <span>→</span></a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+  const section = document.querySelector('[data-projects-timeline]');
+  const frame = document.querySelector('[data-project-frame]');
+  const statement = document.querySelector('[data-project-statement]');
+  const track = document.querySelector('[data-project-track]');
+  const paths = gsap.utils.toArray('.trajectory');
+  const media = gsap.matchMedia();
+
+  media.add('(min-width: 768px) and (prefers-reduced-motion: no-preference)', () => {
+    if (!section || !frame || !statement || !track) return;
+    paths.forEach((path) => {
+      const length = path.getTotalLength();
+      gsap.set(path, { strokeDasharray: length, strokeDashoffset: length });
+    });
+    gsap.set(track, { x: () => window.innerWidth + 80 });
+    const timeline = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: 'top top',
+        end: 'bottom bottom',
+        pin: frame,
+        pinSpacing: false,
+        scrub: 1.35,
+        invalidateOnRefresh: true,
+      },
+    });
+    timeline.to(statement, { scale: 1, duration: 0.2 })
+      .to(statement, { autoAlpha: 0, y: -60, scale: 0.9, duration: 0.2 })
+      .to(paths, { strokeDashoffset: 0, duration: 0.25, stagger: 0.05 }, '<')
+      .to(track, { x: () => -(track.scrollWidth - window.innerWidth + 56), duration: 0.58, ease: 'none' })
+      .to('.projects-end-card', { scale: 1, duration: 0.1 }, '<0.35');
+  });
+</script>

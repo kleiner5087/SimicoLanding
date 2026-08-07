@@ -1,0 +1,29 @@
+---
+// EDITABLE: Section heading
+const heading = 'Excelencia Industrial.';
+// EDITABLE: Description paragraphs (multiple)
+const paragraphs = [
+  'SIMICO es una empresa 100% mexicana, especializada en proveer soluciones técnicas, industriales y operativas para el\
+  sector energético, petrolero, construcción e ingeniería. Ofrecemos servicios de alta calidad con personal especializado y\
+  equipos certificados, adaptándonos a las necesidades de cada cliente en proyectos de gran escala o alta complejida'
+];
+// EDITABLE: Closing statement
+const closing = 'Capacidad técnica, confianza operativa. Soluciones industriales que funcionan.';
+// EDITABLE: CTA label / URL
+const cta = { label: 'Saber Más', url: '/nosotros' };
+// EDITABLE: Industrial image source
+const image = 'src/assets/nosotros.jpg';
+---
+
+<section id="quienes-somos" class="about-section" aria-labelledby="about-heading">
+  <div class="about-inner">
+    <div class="about-media"><img src={image} alt="Reunión de equipo de SIMICO" loading="lazy" /></div>
+    <div class="about-copy">
+      <p class="about-kicker">NOSOTROS</p>
+      <h2 id="about-heading">{heading}</h2>
+      {paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+      <p class="about-closing">{closing}</p>
+      <a class="about-cta" href={cta.url}>{cta.label}<span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,43 @@
+---
+const specialties = [
+  { title: 'Ingeniería', description: 'Diseño y planificación técnica de alta precisión para proyectos industriales complejos, asegurando viabilidad, seguridad y optimización de recursos desde la fase conceptual.', icon: '/icons/big-gear.png' },
+  { title: 'Mantenimiento', description: 'Servicios operativos preventivos y correctivos para infraestructura energética y petrolera, garantizando la continuidad y seguridad de las operaciones en todo momento.', icon: '/icons/camion-grua.png' },
+  { title: 'Construcción', description: 'Ejecución de obra civil, estructural y mecánica con equipos certificados y altos estándares de calidad, adaptándonos a las exigencias del sector energético.', icon: '/icons/mascara-de-soldadura.png' },
+];
+---
+
+<section id="especialidades" class="specialties-section" aria-labelledby="specialties-heading">
+  <div class="specialties-inner">
+    <div class="specialties-intro">
+      <p class="specialties-kicker">SIMICO</p>
+      <h2 id="specialties-heading">Capacidad para<br /><em>hacerlo posible.</em></h2>
+    </div>
+    <div class="specialties-accordion" data-specialties>
+      {specialties.map((item, index) => (
+        <article class:list={{ 'specialty-card': true, 'is-active': index === 0 }} data-specialty>
+          <div class="specialty-wave" aria-hidden="true"></div>
+          <div class="specialty-shade" aria-hidden="true"></div>
+          <div class="specialty-content">
+            <div class="specialty-icon"><img src={item.icon} alt="" loading="lazy" decoding="async" /></div>
+            <h3>{item.title}</h3>
+            <p>{item.description}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  const cards = [...document.querySelectorAll('[data-specialty]')];
+  const activate = (card) => cards.forEach((item) => item.classList.toggle('is-active', item === card));
+  cards.forEach((card) => {
+    card.addEventListener('mouseenter', () => activate(card));
+    card.addEventListener('click', () => activate(card));
+  });
+  const mobileObserver = new IntersectionObserver((entries) => {
+    const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+    if (visible && window.matchMedia('(max-width: 767px)').matches) activate(visible.target);
+  }, { root: document.querySelector('[data-specialties]'), threshold: [0.55, 0.8] });
+  cards.forEach((card) => mobileObserver.observe(card));
+</script>

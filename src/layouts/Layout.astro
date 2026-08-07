@@ -1,0 +1,15 @@
+---
+import '../styles/site.css';
+const { title = 'SIMICO' } = Astro.props;
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content="SIMICO: servicios técnicos e industriales especializados en México." />
+    <link rel="icon" type="image/svg+xml" href="/simico.svg" />
+    <title>{title}</title>
+  </head>
+  <body><slot /></body>
+</html>

@@ -1,0 +1,13 @@
+---
+// EDITABLE: Section Heading Text
+const heading = 'ESTAMOS LISTOS PARA IMPULSAR TU PRÓXIMO PROYECTO';
+// EDITABLE: Introductory Paragraph Text
+const description = 'Hable directamente con nuestros ingenieros y expertos en mantenimiento industrial en el sur de México. Solicite un presupuesto sin compromiso para sus necesidades técnicas.';
+// EDITABLE: CTA Button Label / URL / Arrow icon
+const cta = { label: 'COTIZAR PROYECTO', url: '/contacto' };
+---
+<section id="contacto-cta" class="cta-section" data-cta-section aria-labelledby="cta-heading"><div class="cta-content"><p class="cta-kicker">CONTACTO</p><h2 id="cta-heading">{heading}</h2><p class="cta-description">{description}</p><a class="cta-button" href={cta.url}>{cta.label} <span aria-hidden="true">→</span></a></div></section>
+<script>
+  const ctaSection=document.querySelector('[data-cta-section]');
+  if(ctaSection) new IntersectionObserver(([entry])=>ctaSection.classList.toggle('is-visible',entry.isIntersecting),{threshold:.2}).observe(ctaSection);
+</script>

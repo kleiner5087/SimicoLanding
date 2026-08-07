@@ -1,0 +1,7 @@
+---
+const { project, index } = Astro.props;
+---
+<article class:list={{'project-slide': true, 'is-active': index === 0}} data-slide>
+  <div class="project-slide-copy"><div class="project-slide-number">{String(index + 1).padStart(2, '0')}</div><h3>{project.title}</h3><p class="project-slide-description">{project.description}</p><a class="project-slide-link" href={project.link}>Ver proyecto <span>↗</span></a></div>
+  <div class="project-slide-media"><img src={project.image} alt={project.title} loading={index === 0 ? 'eager' : 'lazy'} /></div>
+</article>
