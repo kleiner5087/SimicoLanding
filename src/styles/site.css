@@ -49,7 +49,7 @@ h1,h2,h3,h4,h5,h6 { font-family:var(--font-heading); }
 /* About */
 .about-section { position:relative; height:300vh; overflow:visible; padding:0; background:var(--red); color:#fff; }
 .about-pin { position:sticky; top:0; display:flex; height:100vh; overflow:hidden; background:#fff; align-items:center; justify-content:center; }
-.about-curtain { position:absolute; z-index:1; right:-40%; bottom:-8%; left:-40%; height:108%; border-radius:50% 50% 0 0 / 100% 100% 0 0; background:var(--red); pointer-events:none; will-change:transform; }
+.about-curtain { position:absolute; z-index:1; right:0; bottom:-14%; left:0; height:128%; border-radius:50% 50% 0 0 / 100% 100% 0 0; background:var(--red); pointer-events:none; will-change:transform; transform-origin:50% 100%; }
 .about-inner { position:relative; z-index:2; display:grid; width:90%; max-width:1360px; margin:auto; grid-template-columns:1fr 1fr; align-items:stretch; }
 .about-media { position:relative; max-height:540px; overflow:hidden; background:#d8d9da; will-change:transform,opacity; }
 .about-media img { display:block; width:100%; height:100%; object-fit:cover; transition:transform .8s cubic-bezier(.25,1,.5,1); }
@@ -57,7 +57,7 @@ h1,h2,h3,h4,h5,h6 { font-family:var(--font-heading); }
 .about-copy { display:flex; padding:0 clamp(2.25rem,5.4vw,5.4rem) clamp(2.25rem,5.4vw,5.4rem); flex-direction:column; justify-content:center; text-align:justify; }
 .about-heading-block,.about-copy-body { will-change:transform,opacity; }
 .about-kicker { margin:0 0 1.6rem; color:#fff; font-size:12px; font-weight:700; letter-spacing:.18em; opacity:.82; }
-.about-copy h2 { margin:0 0 2.2rem; color:#fff; font-size:clamp(2.5rem,4.5vw,4.5rem); line-height:1; letter-spacing:-.05em; text-shadow:0 8px 30px rgba(0,0,0,.35); }
+.about-copy h2 { margin:0 0 2.2rem; color:var(--dark); font-size:clamp(2.5rem,4.5vw,4.5rem); line-height:1; letter-spacing:-.05em; text-shadow:0 8px 30px rgba(0,0,0,.18); }
 .about-copy-body>p:not(.about-closing) { max-width:600px; margin:0 0 1.15rem; color:rgba(255,255,255,.88); font-size:clamp(.9rem,1.1vw,1.05rem); line-height:1.7; }
 .about-closing { max-width:480px; margin:1rem 0 2rem; color:#fff; font-size:1.05rem; font-weight:700; line-height:1.45; }
 .about-cta { align-self:flex-start; border-radius:5px; padding:15px 23px; background:#fff; color:var(--red); font-size:14px; font-weight:700; letter-spacing:.05em; transition:background-color .25s cubic-bezier(.25,1,.5,1),color .25s cubic-bezier(.25,1,.5,1),transform .25s cubic-bezier(.25,1,.5,1),box-shadow .25s ease; }

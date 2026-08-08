@@ -104,7 +104,7 @@ const cta = { label: 'Saber Más', url: '/nosotros' };
 
     measureFlip();
 
-    gsap.set(curtain, { yPercent: 100 });
+    gsap.set(curtain, { scaleX: 0.2, scaleY: 0.2 });
     gsap.set(headingBlock, {
       autoAlpha: 0,
       x: () => headingFlip.x,
@@ -134,7 +134,7 @@ const cta = { label: 'Saber Más', url: '/nosotros' };
 
     timeline
       // Fase 1 — Media luna: el arco convexo sube desde abajo y cubre el 100% de la pantalla
-      .to(curtain, { yPercent: 0, duration: 1.35, ease: 'aboutOrganic' })
+      .to(curtain, { scaleX: 1, scaleY: 1, duration: 2.1, ease: 'aboutOrganic' })
       // Fase 2a — El título aparece primero, deslizándose desde abajo hacia el centro
       .to(headingBlock, {
         autoAlpha: 1,
