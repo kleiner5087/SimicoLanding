@@ -24,10 +24,10 @@ const cta = { label: 'Saber Más', url: '/nosotros' };
       <div class="about-media" data-about-media><img src={image} alt="Reunión de equipo de SIMICO" loading="lazy" /></div>
       <div class="about-copy" data-about-copy>
         <div class="about-heading-block" data-about-heading-block>
-          <p class="about-kicker">NOSOTROS</p>
           <h2 id="about-heading">{heading}</h2>
         </div>
         <div class="about-copy-body" data-about-copy-body>
+          <p class="about-kicker">NOSOTROS</p>
           {paragraphs.map((paragraph) => <p>{paragraph}</p>)}
           <p class="about-closing">{closing}</p>
           <a class="about-cta" href={cta.url}>{cta.label}<span aria-hidden="true">↗</span></a>
@@ -134,7 +134,7 @@ const cta = { label: 'Saber Más', url: '/nosotros' };
 
     timeline
       // Fase 1 — Media luna: el arco convexo sube desde abajo y cubre el 100% de la pantalla
-      .to(curtain, { scaleX: 1, scaleY: 1, duration: 2.1, ease: 'aboutOrganic' })
+      .to(curtain, { scaleX: 1.18, scaleY: 1.18, duration: 2.1, ease: 'aboutOrganic' })
       // Fase 2a — El título aparece primero, deslizándose desde abajo hacia el centro
       .to(headingBlock, {
         autoAlpha: 1,
