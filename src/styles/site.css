@@ -49,7 +49,7 @@ h1,h2,h3,h4,h5,h6 { font-family:var(--font-heading); }
 /* About */
 .about-section { position:relative; height:300vh; overflow:visible; padding:0; background:var(--red); color:#fff; }
 .about-pin { position:sticky; top:0; display:flex; height:100vh; overflow:hidden; background:#fff; align-items:center; justify-content:center; }
-.about-curtain { position:absolute; z-index:1; right:-8%; bottom:-22%; left:-8%; height:148%; border-radius:50% 50% 0 0 / 100% 100% 0 0; background:var(--red); pointer-events:none; will-change:transform; transform-origin:50% 100%; }
+.about-curtain { position:absolute; z-index:1; right:-18%; bottom:-34%; left:-18%; height:180%; border-radius:50% 50% 0 0 / 100% 100% 0 0; background:var(--red); pointer-events:none; will-change:transform; transform-origin:50% 100%; }
 .about-inner { position:relative; z-index:2; display:grid; width:90%; max-width:1360px; margin:auto; grid-template-columns:1fr 1fr; align-items:stretch; }
 .about-media { position:relative; max-height:540px; overflow:hidden; background:#d8d9da; will-change:transform,opacity; }
 .about-media img { display:block; width:100%; height:100%; object-fit:cover; transition:transform .8s cubic-bezier(.25,1,.5,1); }

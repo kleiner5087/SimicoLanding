@@ -27,7 +27,6 @@ const cta = { label: 'Saber Más', url: '/nosotros' };
           <h2 id="about-heading">{heading}</h2>
         </div>
         <div class="about-copy-body" data-about-copy-body>
-          <p class="about-kicker">NOSOTROS</p>
           {paragraphs.map((paragraph) => <p>{paragraph}</p>)}
           <p class="about-closing">{closing}</p>
           <a class="about-cta" href={cta.url}>{cta.label}<span aria-hidden="true">↗</span></a>
