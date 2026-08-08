@@ -17,15 +17,149 @@ const cta = { label: 'Saber Más', url: '/nosotros' };
 // EDITABLE: Industrial image source
 ---
 
-<section id="quienes-somos" class="about-section" aria-labelledby="about-heading">
-  <div class="about-inner">
-    <div class="about-media"><img src={image} alt="Reunión de equipo de SIMICO" loading="lazy" /></div>
-    <div class="about-copy">
-      <p class="about-kicker">NOSOTROS</p>
-      <h2 id="about-heading">{heading}</h2>
-      {paragraphs.map((paragraph) => <p>{paragraph}</p>)}
-      <p class="about-closing">{closing}</p>
-      <a class="about-cta" href={cta.url}>{cta.label}<span aria-hidden="true">↗</span></a>
+<section id="quienes-somos" class="about-section" aria-labelledby="about-heading" data-about-timeline>
+  <div class="about-pin" data-about-pin>
+    <div class="about-curtain" data-about-curtain aria-hidden="true"></div>
+    <div class="about-inner" data-about-inner>
+      <div class="about-media" data-about-media><img src={image} alt="Reunión de equipo de SIMICO" loading="lazy" /></div>
+      <div class="about-copy" data-about-copy>
+        <div class="about-heading-block" data-about-heading-block>
+          <p class="about-kicker">NOSOTROS</p>
+          <h2 id="about-heading">{heading}</h2>
+        </div>
+        <div class="about-copy-body" data-about-copy-body>
+          {paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+          <p class="about-closing">{closing}</p>
+          <a class="about-cta" href={cta.url}>{cta.label}<span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
     </div>
   </div>
 </section>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  import { CustomEase } from 'gsap/CustomEase';
+
+  gsap.registerPlugin(ScrollTrigger, CustomEase);
+  CustomEase.create('aboutOrganic', '0.25, 1, 0.5, 1');
+
+  const section = document.querySelector('[data-about-timeline]');
+  const pin = document.querySelector('[data-about-pin]');
+  const curtain = document.querySelector('[data-about-curtain]');
+  const media = document.querySelector('[data-about-media]');
+  const headingBlock = document.querySelector('[data-about-heading-block]');
+  const copyBody = document.querySelector('[data-about-copy-body]');
+
+  const mm = gsap.matchMedia();
+
+  // La media luna y el FLIP de la imagen/título se recalculan en cada refresh,
+  // así que el mismo timeline sirve para el grid 1x2 (desktop) y el 1x1 (móvil).
+  mm.add('(prefers-reduced-motion: no-preference)', () => {
+    if (!section || !pin || !curtain || !media || !headingBlock || !copyBody) return;
+
+    let mediaFlip = { x: 0, y: 0, scaleX: 1, scaleY: 1 };
+    let headingFlip = { x: 0, y: 0 };
+
+    // Medido relativo a `.about-pin`, no al viewport: durante el refresh de
+    // ScrollTrigger la página puede estar en scrollY 0, muy lejos de esta
+    // sección, así que las coordenadas de getBoundingClientRect por sí solas
+    // darían un desplazamiento absurdo.
+    const measureFlip = () => {
+      const pinRect = pin.getBoundingClientRect();
+      const heroCenterX = pinRect.width / 2;
+      const heroCenterY = pinRect.height / 2;
+
+      const previousMediaTransform = media.style.transform;
+      media.style.transform = 'none';
+      const mediaRect = media.getBoundingClientRect();
+      media.style.transform = previousMediaTransform;
+
+      const heroWidth = Math.min(pinRect.width * 0.58, 560);
+      const heroHeight = Math.min(pinRect.height * 0.58, 500);
+      const mediaCenterX = mediaRect.left - pinRect.left + mediaRect.width / 2;
+      const mediaCenterY = mediaRect.top - pinRect.top + mediaRect.height / 2;
+
+      mediaFlip = {
+        x: heroCenterX - mediaCenterX,
+        y: heroCenterY - mediaCenterY,
+        scaleX: mediaRect.width ? heroWidth / mediaRect.width : 1,
+        scaleY: mediaRect.height ? heroHeight / mediaRect.height : 1,
+      };
+
+      const previousHeadingTransform = headingBlock.style.transform;
+      headingBlock.style.transform = 'none';
+      const headingRect = headingBlock.getBoundingClientRect();
+      headingBlock.style.transform = previousHeadingTransform;
+
+      const headingCenterX = headingRect.left - pinRect.left + headingRect.width / 2;
+      const headingCenterY = headingRect.top - pinRect.top + headingRect.height / 2;
+
+      headingFlip = {
+        x: heroCenterX - headingCenterX,
+        y: heroCenterY - headingCenterY,
+      };
+    };
+
+    measureFlip();
+
+    gsap.set(curtain, { yPercent: 100 });
+    gsap.set(headingBlock, {
+      autoAlpha: 0,
+      x: () => headingFlip.x,
+      y: () => headingFlip.y + pin.getBoundingClientRect().height * 0.35,
+    });
+    gsap.set(media, {
+      autoAlpha: 0,
+      x: () => mediaFlip.x,
+      y: () => mediaFlip.y + pin.getBoundingClientRect().height * 0.4,
+      scaleX: () => mediaFlip.scaleX * 1.1,
+      scaleY: () => mediaFlip.scaleY * 1.1,
+    });
+    gsap.set(copyBody, { autoAlpha: 0, y: 40 });
+
+    const timeline = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: 'top top',
+        end: 'bottom bottom',
+        pin,
+        pinSpacing: false,
+        scrub: 1.65,
+        invalidateOnRefresh: true,
+        onRefreshInit: measureFlip,
+      },
+    });
+
+    timeline
+      // Fase 1 — Media luna: el arco convexo sube desde abajo y cubre el 100% de la pantalla
+      .to(curtain, { yPercent: 0, duration: 1.35, ease: 'aboutOrganic' })
+      // Fase 2a — El título aparece primero, deslizándose desde abajo hacia el centro
+      .to(headingBlock, {
+        autoAlpha: 1,
+        x: () => headingFlip.x,
+        y: () => headingFlip.y,
+        duration: 1.05,
+        ease: 'aboutOrganic',
+      }, '-=0.15')
+      // Fase 2b — Después la imagen, también de abajo hacia el centro, quedando el título superpuesto
+      .to(media, {
+        autoAlpha: 1,
+        x: () => mediaFlip.x,
+        y: () => mediaFlip.y,
+        scaleX: () => mediaFlip.scaleX,
+        scaleY: () => mediaFlip.scaleY,
+        duration: 1.15,
+        ease: 'aboutOrganic',
+      }, '-=0.35')
+      // Pausa breve con ambos elementos superpuestos y centrados
+      .to({}, { duration: 0.5 })
+      // Fase 3 — Cada elemento viaja a su lugar en el grid y se revela el texto restante
+      .to(media, { x: 0, y: 0, scaleX: 1, scaleY: 1, duration: 1.35, ease: 'aboutOrganic' })
+      .to(headingBlock, { x: 0, y: 0, duration: 1.35, ease: 'aboutOrganic' }, '<0.08')
+      .to(copyBody, { autoAlpha: 1, y: 0, duration: 1.05, ease: 'power2.out' }, '<0.28')
+      // Sostiene el layout final para no saltar de golpe a la siguiente sección
+      .to({}, { duration: 1.15 });
+  });
+</script>
