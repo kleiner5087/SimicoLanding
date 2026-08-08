@@ -4,6 +4,7 @@ const specialties = [
   { title: 'Mantenimiento', description: 'Servicios operativos preventivos y correctivos para infraestructura energética y petrolera, garantizando la continuidad y seguridad de las operaciones en todo momento.', icon: '/icons/camion-grua.png' },
   { title: 'Construcción', description: 'Ejecución de obra civil, estructural y mecánica con equipos certificados y altos estándares de calidad, adaptándonos a las exigencias del sector energético.', icon: '/icons/mascara-de-soldadura.png' },
 ];
+import SectionTransition from './SectionTransition.astro';
 ---
 
 <section id="especialidades" class="specialties-section" aria-labelledby="specialties-heading">
@@ -26,6 +27,7 @@ const specialties = [
       ))}
     </div>
   </div>
+  <SectionTransition />
 </section>
 
 <script>
