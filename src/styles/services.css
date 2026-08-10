@@ -1,6 +1,6 @@
 /* Página /servicios */
 .services-page {
-  background: #07070a;
+  background: #232529;
   color: #fff;
 }
 
@@ -46,11 +46,11 @@
   letter-spacing: .02em;
 }
 
-/* Carrusel radial */
+/* Carrusel radial — tema #232529 + plato con gajos flotantes */
 .services-radial {
   position: relative;
-  height: 500vh;
-  background: #f4f2ee;
+  height: 640vh;
+  background: #232529;
 }
 
 .services-radial-pin {
@@ -58,28 +58,197 @@
   top: 0;
   height: 100vh;
   overflow: hidden;
-  background: #f4f2ee;
+  background: #232529;
+}
+
+/* ── Puente técnico SHRIMP-like (fiel 90% + potenciado 150% SIMICO) ──
+   Overlay absoluto ANTES del título "Servicios" — dividido en 2 mitades para textos laterales.
+   SVG alargado (alto+ancho) y fondo global #232529. */
+.services-bridge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 78vh;
+  min-height: 520px;
+  max-height: 760px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: transparent;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.services-bridge__inner {
+  position: relative;
+  width: 112%;
+  height: 92%;
+  max-width: 1920px;
+  overflow: visible;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.services-bridge-svg {
+  position: absolute;
+  inset: 0;
+  width: 115%;
+  left: -7.5%;
+  height: 108%;
+  top: -4%;
+  overflow: visible;
+  display: block;
+}
+
+.services-bridge-svg--sub { opacity: 0.96; }
+.services-bridge-svg--main { opacity: 1; }
+
+.services-bridge__side {
+  position: absolute;
+  top: 50%;
+  z-index: 6;
+  width: 22%;
+  max-width: 360px;
+  color: #f5f3ef;
+  font: 400 clamp(1.99rem, 2.56vw, 2.76rem)/1.18 Arial, Helvetica, sans-serif;
+  letter-spacing: -.03em;
+  text-wrap: balance;
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+.services-bridge__side--left {
+  left: 6%;
+  text-align: right;
+  padding-right: 1rem;
+  transform: translateY(-50%) translateX(-18px);
+}
+
+.services-bridge__side--right {
+  right: 6%;
+  text-align: left;
+  padding-left: 1rem;
+  transform: translateY(-50%) translateX(18px);
+}
+
+.services-bridge__side strong {
+  color: #EA3221;
+  font-weight: 700;
+}
+
+.services-bridge-track {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.services-bridge-track--sub {
+  stroke: url(#simicoGradSub);
+  stroke-width: 1.15;
+}
+
+.services-bridge-track--main {
+  stroke: url(#simicoGradMain);
+  stroke-width: 1.55;
+}
+
+.services-bridge-pulse {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: url(#simicoGlow);
+  will-change: stroke-dashoffset, opacity;
+}
+
+.services-bridge-pulse--sub {
+  stroke: #EA3221;
+  stroke-width: 2.1;
+  opacity: 1;
+}
+
+.services-bridge-pulse--sub-ghost {
+  stroke: #EA3221;
+  stroke-width: 1.15;
+  opacity: 0.38;
+}
+
+.services-bridge-pulse--main {
+  stroke: #EA3221;
+  stroke-width: 2.45;
+  opacity: 1;
+}
+
+.services-bridge-pulse--main-ghost {
+  stroke: #ff6b5a;
+  stroke-width: 1.25;
+  opacity: 0.42;
+}
+
+/* Compatibilidad: antiguo transition (si quedara) oculto por defecto */
+.services-transition {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  will-change: opacity;
+}
+
+.services-transition__svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: clamp(160px, 38vh, 360px);
+  overflow: visible;
+  display: block;
+}
+
+.services-transition__track,
+.services-transition__line {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.services-transition__track {
+  stroke: rgba(35, 37, 41, 0.10);
+  stroke-width: 1px;
+}
+
+.services-transition__line {
+  stroke: #EA3221;
+  stroke-width: 1.8px;
+}
+
+.services-transition__dot {
+  fill: #EA3221;
+  stroke: rgba(255, 255, 255, 0.9);
+  stroke-width: 1px;
+  opacity: 0;
 }
 
 .services-radial-wipe {
   position: absolute;
   z-index: 1;
   inset: 0;
-  background: #f4f2ee;
+  background: #232529;
   pointer-events: none;
 }
 
-/* Entrada independiente del footer al abandonar el carrusel. */
+/* Entrada independiente del footer al abandonar el carrusel — fade estacionario sin translateY. */
 .services-page + .site-footer {
   opacity: 0;
-  transform: translateY(64px);
-  transition: opacity .85s cubic-bezier(.22, 1, .36, 1), transform .85s cubic-bezier(.22, 1, .36, 1);
-  will-change: opacity, transform;
+  transition: opacity .85s cubic-bezier(.22, 1, .36, 1);
+  will-change: opacity;
 }
 
 .services-page + .site-footer.is-visible {
   opacity: 1;
-  transform: translateY(0);
 }
 
 .services-stage {
@@ -87,7 +256,7 @@
   z-index: 2;
   inset: 0;
   opacity: 0;
-  will-change: transform, opacity;
+  will-change: opacity, filter;
 }
 
 .services-wheel-disc {
@@ -98,13 +267,15 @@
   width: min(145vw, 1850px);
   aspect-ratio: 1;
   overflow: hidden;
-  border: 1px solid rgba(35, 37, 41, .1);
+  border: none;
   border-radius: 50%;
+  /* 8 gajos flotantes claros sobre #232529 — diámetros entrecortados: solo los gajos tienen contorno */
   background:
-    radial-gradient(circle at center, #fff 0 32%, transparent 32.2%),
-    repeating-conic-gradient(from -22.5deg, rgba(234, 50, 33, .035) 0 44.65deg, rgba(35, 37, 41, .16) 44.65deg 45deg),
-    radial-gradient(circle at center, rgba(234, 50, 33, .075), rgba(255, 255, 255, .74) 58%, rgba(226, 222, 215, .7) 100%);
-  box-shadow: 0 0 100px rgba(35, 37, 41, .1), inset 0 0 90px rgba(234, 50, 33, .035);
+    radial-gradient(circle at center, #232529 0 31.8%, transparent 32.2%),
+    repeating-conic-gradient(from -22.5deg, #3d444e 0 41.5deg, transparent 41.5deg 45deg),
+    radial-gradient(circle at center, #232529 0 62%, #1a1e22 100%);
+  box-shadow:
+    0 18px 60px rgba(0,0,0,.45);
   transform: translate(-50%, -50%);
   transform-origin: center;
   will-change: transform;
@@ -125,20 +296,25 @@
 
 .services-radial-heading .services-page-kicker {
   margin-bottom: .8rem;
+  color: #EA3221;
 }
 
 .services-radial-heading h2 {
   margin: 0;
-  color: #232529;
+  color: #EA3221;
   font: 700 clamp(2.6rem, 5vw, 4.7rem)/.95 Arial, Helvetica, sans-serif;
   letter-spacing: -.04em;
-  text-shadow: 0 0 28px rgba(234, 50, 33, .12);
+  text-shadow: none;
+}
+
+.services-radial-heading h3 {
+  color: #cfd3d8;
 }
 
 .services-radial-heading > span {
   display: block;
   margin-top: 1rem;
-  color: rgba(35, 37, 41, .62);
+  color: rgba(255, 255, 255, .62);
   font: 400 .76rem/1.45 Arial, Helvetica, sans-serif;
 }
 
@@ -166,7 +342,7 @@
   border: 0;
   padding: .75rem 0;
   background: transparent;
-  color: rgba(35, 37, 41, .68);
+  color: rgba(255, 255, 255, .62);
   cursor: pointer;
   font: 600 .82rem/1 Arial, Helvetica, sans-serif;
   letter-spacing: .04em;
@@ -175,7 +351,7 @@
 }
 
 .services-radial-navigation button:hover {
-  color: #232529;
+  color: #ffffff;
 }
 
 .services-radial-navigation button:disabled {
@@ -200,10 +376,11 @@
   border: 0;
   background: transparent;
   box-shadow: none;
-  color: #232529;
+  color: #f0ece6;
   flex-direction: column;
   text-align: center;
-  transition: opacity .2s ease, transform .2s ease;
+  /* Sin transición para scroll rápido: GSAP controla posición sin lag flotante */
+  transition: none;
   will-change: transform, opacity;
 }
 
@@ -245,23 +422,12 @@
 .service-radial-card h3 {
   position: relative;
   margin: 1rem 0 .55rem;
-  font: 600 clamp(1rem, 1.35vw, 1.25rem)/1.25 Arial, Helvetica, sans-serif;
+  color: #ffffff;
+  font: 600 clamp(1.2rem, 1.62vw, 1.5rem)/1.25 Arial, Helvetica, sans-serif;
 }
 
 .service-radial-card h3::after {
-  display: block;
-  width: 24px;
-  height: 2px;
-  margin: .55rem auto 0;
-  background: #ea3221;
-  content: '';
-  opacity: .35;
-  transition: width .25s ease, opacity .25s ease;
-}
-
-.service-radial-card.is-active h3::after {
-  width: 42px;
-  opacity: 1;
+  display: none;
 }
 
 .service-radial-description {
@@ -269,8 +435,8 @@
   max-width: 280px;
   margin: 0;
   overflow: hidden;
-  color: rgba(35, 37, 41, .68);
-  font: 400 clamp(.78rem, .9vw, .9rem)/1.5 Arial, Helvetica, sans-serif;
+  color: rgba(255, 255, 255, .72);
+  font: 400 clamp(.94rem, 1.08vw, 1.08rem)/1.5 Arial, Helvetica, sans-serif;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
 }
@@ -300,6 +466,20 @@
     min-height: 178px;
     padding: 1rem;
   }
+
+  .services-transition__svg {
+    height: clamp(140px, 32vh, 300px);
+  }
+
+  .services-transition__line {
+    stroke-width: 1.6px;
+  }
+
+  .services-bridge {
+    height: 92vh;
+    min-height: 560px;
+    max-height: 740px;
+  }
 }
 
 /* Mobile y reducción de movimiento: secuencia estable sin pinning. */
@@ -322,6 +502,35 @@
   .services-wheel-disc,
   .services-radial-navigation {
     display: none;
+  }
+
+  .services-bridge {
+    display: none !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    max-height: none !important;
+  }
+
+  /* En mobile la transición se simplifica a línea vertical centrada estática */
+  .services-transition {
+    height: 120px;
+    top: 0;
+  }
+
+  .services-transition__svg {
+    height: 120px;
+  }
+
+  .services-transition__track {
+    opacity: 0.6;
+  }
+
+  .services-transition__line {
+    stroke-width: 1.5px;
+  }
+
+  .services-transition__dot {
+    opacity: 1 !important;
   }
 
   .services-radial-heading {
@@ -360,10 +569,10 @@
     width: 100%;
     min-height: 190px;
     opacity: 1 !important;
-    border: 1px solid rgba(35, 37, 41, .1);
+    border: 1px solid rgba(255, 255, 255, .08);
     border-radius: 12px;
     padding: 1.25rem;
-    background: rgba(255, 255, 255, .72);
+    background: rgba(22, 24, 27, .92);
     transform: none !important;
   }
 
@@ -377,6 +586,21 @@
     opacity: 1;
     transform: none;
     transition: none;
+  }
+
+  .services-transition__line {
+    stroke-dasharray: none !important;
+    stroke-dashoffset: 0 !important;
+    opacity: 1;
+  }
+
+  .services-transition__dot {
+    opacity: 1 !important;
+  }
+
+  .services-stage {
+    opacity: 1 !important;
+    filter: none !important;
   }
 }
 

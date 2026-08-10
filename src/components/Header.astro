@@ -1,14 +1,12 @@
 ---
 // EDITABLE: Header Logo String/Image
 const logo = '/simico_largo.svg';
-const currentPath = Astro.url.pathname.toLowerCase();
-const servicesHref = currentPath.startsWith('/servicios') ? '/servicios' : '#servicios';
 // EDITABLE: Header Navigation Links Array
 const links = [
-  { label: 'Inicio', href: '/Inicio', active: currentPath === '/' || currentPath.startsWith('/inicio') },
-  { label: 'Quiénes somos', href: '#quienes-somos' },
-  { label: 'Servicios', href: servicesHref, active: currentPath.startsWith('/servicios') },
-  { label: 'Proyectos', href: '#proyectos' },
+  { label: 'Inicio', href: '#inicio' },
+  { label: 'Quiénes somos', href: '#about' },
+  { label: 'Servicios', href: '#servicios' },
+  { label: 'Proyectos', href: '/proyectos' },
 ];
 // EDITABLE: Header CTA Label & URL
 const cta = { label: 'Contacto', href: '/contacto' };
@@ -16,13 +14,13 @@ const cta = { label: 'Contacto', href: '/contacto' };
 
 <header class="site-header" data-header>
   <div class="header-inner">
-    <a class="brand" href="/Inicio" aria-label="SIMICO, volver al inicio"><img src={logo} alt="SIMICO" /></a>
+    <a class="brand" href="/" aria-label="SIMICO, volver al inicio"><img src={logo} alt="SIMICO" /></a>
     <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation" data-menu-toggle>
       <span></span><span></span><span></span><span class="sr-only">Abrir menú</span>
     </button>
     <nav id="primary-navigation" class="primary-nav" aria-label="Navegación principal" data-navigation>
       <div class="nav-links">
-        {links.map((link) => <a class:list={{ active: link.active }} href={link.href}>{link.label}</a>)}
+        {links.map((link) => <a href={link.href}>{link.label}</a>)}
       </div>
       <a class="header-cta" href={cta.href}>{cta.label}</a>
     </nav>
@@ -47,6 +45,19 @@ const cta = { label: 'Contacto', href: '/contacto' };
     const inHero = currentScrollY < (hero?.offsetHeight ?? 0) - 2;
     const inStatements = statements && heroBottom <= 1 && statementsBottom > 1;
     const afterStatements = statements && statementsBottom <= 1;
+
+    // Bloqueo estricto del header SOLO en la sección Servicios (incluye puente + carrusel)
+    // Incluso scrolleando hacia arriba debe permanecer oculto mientras Servicios esté visible
+    if (servicesRadial) {
+      const radialRect = servicesRadial.getBoundingClientRect();
+      const inServicesRadialAny = radialRect.top < window.innerHeight && radialRect.bottom > 0;
+      if (inServicesRadialAny) {
+        header?.classList.add('hide-header');
+        header?.classList.remove('scrolled', 'statements-complete');
+        lastScrollY = currentScrollY;
+        return;
+      }
+    }
 
     if (servicesPage) {
       const servicesHeroBottom = servicesHero?.getBoundingClientRect().bottom ?? 0;

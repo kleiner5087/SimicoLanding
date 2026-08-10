@@ -18,7 +18,7 @@ h1,h2,h3,h4,h5,h6 { font-family:var(--font-heading); }
 .primary-nav,.nav-links { display:flex; align-items:center; }
 .primary-nav { gap:42px; }.nav-links { gap:34px; }
 .nav-links a { position:relative; padding:12px 0; font-size:16px; font-weight:500; }
-.nav-links a.active { color:var(--red); }.nav-links a.active::after { content:''; position:absolute; right:0; bottom:3px; left:0; height:2px; background:var(--red); }
+.nav-links a:hover { opacity:.8; }
 .header-cta,.hero-cta { background:var(--red); color:#fff; border-radius:5px; padding:14px 24px; font-size:14px; font-weight:700; letter-spacing:.05em; }
 .menu-toggle { display:none; }
 
