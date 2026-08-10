@@ -3,13 +3,13 @@
 const logo = '/simico_largo.svg';
 // EDITABLE: Header Navigation Links Array
 const links = [
-  { label: 'Inicio', href: '#inicio' },
-  { label: 'Quiénes somos', href: '#about' },
-  { label: 'Servicios', href: '#servicios' },
+  { label: 'Inicio', href: '/' },
+  { label: 'Quiénes somos', href: '/#about' },
+  { label: 'Servicios', href: '/#servicios' },
   { label: 'Proyectos', href: '/proyectos' },
 ];
 // EDITABLE: Header CTA Label & URL
-const cta = { label: 'Contacto', href: '/contacto' };
+const cta = { label: 'Contacto', href: '/#contacto' };
 ---
 
 <header class="site-header" data-header>
@@ -57,6 +57,19 @@ const cta = { label: 'Contacto', href: '/contacto' };
         lastScrollY = currentScrollY;
         return;
       }
+    }
+
+    // Proyectos — replica comportamiento index: oculta al bajar, muestra al subir
+    const isProyectos = document.querySelector('.grid-projects') || window.location.pathname.toLowerCase().startsWith('/proyectos');
+    if (isProyectos) {
+      if (currentScrollY <= 12) {
+        header?.classList.remove('hide-header', 'scrolled');
+      } else {
+        header?.classList.toggle('hide-header', !scrollingUp);
+        header?.classList.toggle('scrolled', scrollingUp);
+      }
+      lastScrollY = currentScrollY;
+      return;
     }
 
     if (servicesPage) {

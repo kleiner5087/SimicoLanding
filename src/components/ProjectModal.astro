@@ -1,0 +1,38 @@
+---
+import '../styles/projects.css';
+interface Props {
+  id?: string;
+}
+const { id = 'project-modal' } = Astro.props;
+---
+
+<div class="project-modal" data-modal aria-hidden="true" id={id}>
+  <!-- Header modal — kicker SIMICO removido por brief -->
+  <div class="project-modal__topbar" aria-hidden="true">
+    <button class="topbar__close" data-modal-close aria-label="Cerrar modal">✕</button>
+  </div>
+
+  <button class="project-modal__arrow project-modal__arrow--prev" data-modal-prev aria-label="Proyecto anterior">‹</button>
+  <button class="project-modal__arrow project-modal__arrow--next" data-modal-next aria-label="Proyecto siguiente">›</button>
+
+  <div class="project-modal__backdrop" data-modal-backdrop></div>
+
+  <div class="project-modal__content" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-website__media">
+      <img data-modal-image alt="" />
+    </div>
+
+    <div class="modal-website__body" style="padding: 1.8rem 2rem;">
+      <p class="modal-website__eyebrow" data-modal-category></p>
+      <h3 id="modal-title" data-modal-title></h3>
+      <p class="modal-website__desc" data-modal-desc></p>
+      <p data-modal-long style="color:#4b4d50; font:400 14px/1.65 var(--font-primary); margin: 0 0 1.4rem;"></p>
+      <div class="project-modal__gallery" data-modal-gallery></div>
+      <div class="footer__stats" data-modal-stats style="margin-top: 1.2rem;"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Lógica manejada desde la página principal para mantener componente reutilizable
+</script>

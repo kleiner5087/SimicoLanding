@@ -1,0 +1,25 @@
+---
+import ConceptCard from './ConceptCard.astro';
+import { projects } from '../data/projects';
+import '../styles/projects.css';
+---
+
+<section class="grid-projects" aria-labelledby="grid-projects-heading">
+  <div class="grid-projects__header">
+    <h2 id="grid-projects-heading">Proyectos</h2>
+    <p>Ingeniería que se ve, se toca y perdura — seis conceptos llevados a obra.</p>
+  </div>
+
+  <div class="grid-projects__grid" data-grid>
+    {projects.map((p, i) => (
+      <ConceptCard
+        title={p.title}
+        category={p.category}
+        description={p.description}
+        image={p.image}
+        stats={p.stats}
+        index={i}
+      />
+    ))}
+  </div>
+</section>

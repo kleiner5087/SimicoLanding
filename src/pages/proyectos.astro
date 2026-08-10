@@ -1,0 +1,101 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import ProyectosHero from '../components/ProyectosHero.astro';
+import ProyectosGrid from '../components/ProyectosGrid.astro';
+import ProjectModal from '../components/ProjectModal.astro';
+---
+
+<Layout title="Proyectos | SIMICO">
+  <Header />
+  <ProyectosHero />
+  <ProyectosGrid />
+  <ProjectModal />
+  <Footer />
+</Layout>
+
+<script>
+  import { projects } from '../data/projects';
+
+  const cards = document.querySelectorAll('[data-card]');
+  const modal = document.querySelector('[data-modal]');
+  const backdrop = document.querySelector('[data-modal-backdrop]');
+  const closeBtn = document.querySelector('[data-modal-close]');
+  const prevBtn = document.querySelector('[data-modal-prev]');
+  const nextBtn = document.querySelector('[data-modal-next]');
+  const mImage = document.querySelector('[data-modal-image]');
+  const mCategory = document.querySelector('[data-modal-category]');
+  const mTitle = document.querySelector('[data-modal-title]');
+  const mDesc = document.querySelector('[data-modal-desc]');
+  const mLong = document.querySelector('[data-modal-long]');
+  const mGallery = document.querySelector('[data-modal-gallery]');
+  const mStats = document.querySelector('[data-modal-stats]');
+  const mHero = document.querySelector('[data-modal-hero]');
+
+  let currentIdx = 0;
+
+  const renderModal = (idx) => {
+    const p = projects[idx];
+    if (!p || !modal) return;
+    currentIdx = idx;
+    if (mImage) { mImage.src = p.image; mImage.alt = p.title; }
+    if (mCategory) mCategory.textContent = p.category;
+    if (mTitle) mTitle.textContent = p.title;
+    if (mDesc) mDesc.textContent = p.description;
+    if (mLong) mLong.textContent = p.longDescription;
+    if (mGallery) mGallery.innerHTML = p.gallery.map(src => `<img src="${src}" alt="${p.title} detalle" loading="lazy" />`).join('');
+    if (mStats) {
+      const stats = [
+        { label: 'Proyectos Completados', value: '120+' },
+        { label: 'Design Awards', value: '16' },
+        { label: 'Client Rating', value: '4.8/5' },
+      ];
+      // Usa stats del proyecto si existe, si no genéricos
+      mStats.innerHTML = stats.map(s => `<div><strong>${s.value}</strong><span>${s.label}</span></div>`).join('');
+    }
+    // Actualiza hero background con imagen del proyecto para touch SIMICO
+    if (mHero) {
+      mHero.style.backgroundImage = `linear-gradient(0deg, rgba(255,255,255,.92), rgba(255,255,255,.75)), url('${p.image}')`;
+      mHero.style.backgroundSize = 'cover';
+      mHero.style.backgroundPosition = 'center';
+    }
+  };
+
+  const openModal = (idx) => {
+    renderModal(idx);
+    modal?.classList.add('is-open');
+    modal?.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  };
+  const closeModal = () => {
+    modal?.classList.remove('is-open');
+    modal?.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  };
+  const navigate = (dir) => {
+    const nextIdx = (currentIdx + dir + projects.length) % projects.length;
+    renderModal(nextIdx);
+  };
+
+  cards.forEach(card => {
+    const idx = Number(card.getAttribute('data-index'));
+    const handler = () => openModal(idx);
+    card.addEventListener('click', handler);
+    card.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handler(); }});
+  });
+  backdrop?.addEventListener('click', closeModal);
+  closeBtn?.addEventListener('click', closeModal);
+  prevBtn?.addEventListener('click', (e) => { e.stopPropagation(); navigate(-1); });
+  nextBtn?.addEventListener('click', (e) => { e.stopPropagation(); navigate(1); });
+  document.addEventListener('keydown', (e) => {
+    if (!modal?.classList.contains('is-open')) return;
+    if (e.key === 'Escape') closeModal();
+    if (e.key === 'ArrowLeft') navigate(-1);
+    if (e.key === 'ArrowRight') navigate(1);
+  });
+  // Clic fuera del contenido (en el modal pero no en el contenido) ya manejado por backdrop
+  modal?.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+</script>

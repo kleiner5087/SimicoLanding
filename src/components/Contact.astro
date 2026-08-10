@@ -1,0 +1,133 @@
+---
+// Contact — sección deslizante de derecha a izquierda sobre CTA
+---
+
+<section id="contacto" class="contact-section" data-contact-section aria-labelledby="contact-heading">
+  <div class="contact-inner">
+    <div class="contact-info">
+      <p class="contact-kicker">CONTACTO</p>
+      <h2 id="contact-heading">Hablemos de tu<br>próximo proyecto</h2>
+      <p class="contact-lead">Cuéntanos tu reto industrial y te respondemos en menos de 24 horas con una propuesta técnica sin compromiso.</p>
+      <div class="contact-meta">
+        <div class="meta-item">
+          <span>Ventas</span>
+          <a href="mailto:ventas@simico.mx">ventas@simico.mx</a>
+        </div>
+        <div class="meta-item">
+          <span>Teléfono</span>
+          <a href="tel:+529331234567">+52 933 123 4567</a>
+        </div>
+        <div class="meta-item">
+          <span>Dirección</span>
+          <address>Av. Adolfo Ruiz Cortines s/n, Tabasco 2000, 86035 Villahermosa, Tab.</address>
+        </div>
+      </div>
+    </div>
+
+    <form class="contact-form" data-contact-form novalidate>
+      <div class="form-row">
+        <label>Nombre completo<input type="text" name="nombre" placeholder="Ing. Juan Pérez" required /></label>
+        <label>Empresa<input type="text" name="empresa" placeholder="SIMICO Industrial" /></label>
+      </div>
+      <div class="form-row">
+        <label>Correo electrónico<input type="email" name="email" placeholder="juan@empresa.com" required /></label>
+        <label>Teléfono<input type="tel" name="telefono" placeholder="+52 933..." /></label>
+      </div>
+      <label class="full">Mensaje<textarea name="mensaje" rows="4" placeholder="Cuéntanos sobre tu proyecto, ubicación y tiempos..."></textarea></label>
+      <button type="submit" class="contact-submit">Enviar mensaje <span aria-hidden="true">→</span></button>
+      <p class="form-note">Al enviar aceptas ser contactado por el equipo técnico de SIMICO.</p>
+    </form>
+  </div>
+</section>
+
+
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  gsap.registerPlugin(ScrollTrigger);
+
+  const wrap = document.querySelector('[data-cta-contact-wrap]');
+  const cta = document.querySelector('[data-cta-section]');
+  const contact = document.querySelector('[data-contact-section]');
+  const mm = gsap.matchMedia();
+
+  mm.add('(prefers-reduced-motion: no-preference)', () => {
+    if (!wrap || !cta || !contact) return;
+
+    gsap.set(contact, { xPercent: 100 });
+
+    let hasBlocked = false;
+    const blockScroll = (ms = 1100) => {
+      if (hasBlocked) return;
+      hasBlocked = true;
+      const prevent = (e) => e.preventDefault();
+      const preventKey = (e) => {
+        if (['ArrowUp','ArrowDown','PageUp','PageDown',' ','Home','End'].includes(e.key)) e.preventDefault();
+      };
+      window.addEventListener('wheel', prevent, { passive: false });
+      window.addEventListener('touchmove', prevent, { passive: false });
+      window.addEventListener('keydown', preventKey, { passive: false });
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+      setTimeout(() => {
+        window.removeEventListener('wheel', prevent);
+        window.removeEventListener('touchmove', prevent);
+        window.removeEventListener('keydown', preventKey);
+        document.body.style.overflow = '';
+        document.documentElement.style.overflow = '';
+        setTimeout(() => { hasBlocked = false; }, 1500);
+      }, ms);
+    };
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: wrap,
+        start: 'top top',
+        end: '+=180%',
+        pin: true,
+        pinSpacing: true,
+        scrub: 1.4,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          if (self.progress >= 0.92 && !hasBlocked) {
+            blockScroll(1300);
+          }
+        },
+      }
+    });
+
+    // Deslizamiento tela de derecha a izquierda (0.55 del pin), luego hold con protagonismo
+    tl.to(contact, { xPercent: 0, ease: 'none', duration: 0.55 }, 0);
+    tl.from('.contact-inner', { x: 60, ease: 'none', duration: 0.55 }, 0);
+    tl.to({}, { duration: 0.20 }); // hold: Contact ya cubre CTA, se mantiene antes de ir al footer
+
+    // Bloqueo adicional al completar la superposición, por si el usuario hace scroll muy rápido
+    tl.eventCallback('onComplete', () => blockScroll(800));
+
+    return () => {
+      tl.kill();
+      gsap.set(contact, { clearProps: 'xPercent' });
+    };
+  });
+
+  // Fallback sin animación: asegura que Contact sea visible si no hay GSAP
+  mm.add('(prefers-reduced-motion: reduce)', () => {
+    if (!contact) return;
+    gsap.set(contact, { xPercent: 0 });
+  });
+
+  // Manejo básico del formulario (sin backend)
+  const form = document.querySelector('[data-contact-form]');
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const btn = form.querySelector('.contact-submit');
+    const original = btn ? btn.textContent : '';
+    if (btn) { btn.textContent = '¡Enviado!'; btn.disabled = true; }
+    setTimeout(() => {
+      if (btn) { btn.textContent = original; btn.disabled = false; }
+      form.reset();
+    }, 1800);
+  });
+</script>

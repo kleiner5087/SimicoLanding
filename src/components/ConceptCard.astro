@@ -1,0 +1,18 @@
+---
+import '../styles/projects.css';
+interface Props {
+  title: string;
+  category: string;
+  description: string;
+  image: string;
+  stats: string;
+  index: number;
+}
+const { title, image, index } = Astro.props;
+---
+
+<article class="concept-card" data-card data-index={index} role="button" tabindex="0" aria-label={`Ver proyecto ${title}`}>
+  <div class="concept-card__media">
+    <img src={image} alt={title} loading={index < 3 ? 'eager' : 'lazy'} />
+  </div>
+</article>
