@@ -7,8 +7,8 @@ const heading = 'Excelencia Industrial.';
 // EDITABLE: Description paragraphs (multiple)
 const paragraphs = [
   'SIMICO es una empresa 100% mexicana, especializada en proveer soluciones técnicas, industriales y operativas para el\
-  sector energético, petrolero, construcción e ingeniería. Ofrecemos servicios de alta calidad con personal especializado y\
-  equipos certificados, adaptándonos a las necesidades de cada cliente en proyectos de gran escala o alta complejida'
+   sector energético, petrolero, construcción e ingeniería. Ofrecemos servicios de alta calidad con personal especializado y\
+   equipos certificados, adaptándonos a las necesidades de cada cliente en proyectos de gran escala o alta complejida'
 ];
 // EDITABLE: Closing statement
 const closing = 'Capacidad técnica, confianza operativa. Soluciones industriales que funcionan.';
@@ -53,44 +53,20 @@ const cta = { label: 'Saber Más', url: '/nosotros' };
 
   const mm = gsap.matchMedia();
 
-  // La media luna y el FLIP de la imagen/título se recalculan en cada refresh,
-  // así que el mismo timeline sirve para el grid 1x2 (desktop) y el 1x1 (móvil).
   mm.add('(prefers-reduced-motion: no-preference)', () => {
     if (!section || !pin || !curtain || !media || !headingBlock || !copyBody) return;
 
-    let mediaFlip = { x: 0, y: 0, scaleX: 1, scaleY: 1 };
     let headingFlip = { x: 0, y: 0 };
 
-    // Medido relativo a `.about-pin`, no al viewport: durante el refresh de
-    // ScrollTrigger la página puede estar en scrollY 0, muy lejos de esta
-    // sección, así que las coordenadas de getBoundingClientRect por sí solas
-    // darían un desplazamiento absurdo.
     const measureFlip = () => {
       const pinRect = pin.getBoundingClientRect();
       const heroCenterX = pinRect.width / 2;
       const heroCenterY = pinRect.height / 2;
 
-      const previousMediaTransform = media.style.transform;
-      media.style.transform = 'none';
-      const mediaRect = media.getBoundingClientRect();
-      media.style.transform = previousMediaTransform;
-
-      const heroWidth = Math.min(pinRect.width * 0.58, 560);
-      const heroHeight = Math.min(pinRect.height * 0.58, 500);
-      const mediaCenterX = mediaRect.left - pinRect.left + mediaRect.width / 2;
-      const mediaCenterY = mediaRect.top - pinRect.top + mediaRect.height / 2;
-
-      mediaFlip = {
-        x: heroCenterX - mediaCenterX,
-        y: heroCenterY - mediaCenterY,
-        scaleX: mediaRect.width ? heroWidth / mediaRect.width : 1,
-        scaleY: mediaRect.height ? heroHeight / mediaRect.height : 1,
-      };
-
-      const previousHeadingTransform = headingBlock.style.transform;
+      const prev = headingBlock.style.transform;
       headingBlock.style.transform = 'none';
       const headingRect = headingBlock.getBoundingClientRect();
-      headingBlock.style.transform = previousHeadingTransform;
+      headingBlock.style.transform = prev;
 
       const headingCenterX = headingRect.left - pinRect.left + headingRect.width / 2;
       const headingCenterY = headingRect.top - pinRect.top + headingRect.height / 2;
@@ -103,7 +79,9 @@ const cta = { label: 'Saber Más', url: '/nosotros' };
 
     measureFlip();
 
-    gsap.set(curtain, { scaleX: 0.2, scaleY: 0.2 });
+    // Cortina circular: escala uniforme radial. xPercent:-50 preserva translateX(-50%) del CSS
+    // Inicia casi invisible para evitar "línea roja" en scroll rápido; el CSS ya trae scale(0.02) para evitar FOUC
+    gsap.set(curtain, { xPercent: -50, scale: 0.02, transformOrigin: '50% 50%' });
     gsap.set(headingBlock, {
       autoAlpha: 0,
       x: () => headingFlip.x,
@@ -111,12 +89,10 @@ const cta = { label: 'Saber Más', url: '/nosotros' };
     });
     gsap.set(media, {
       autoAlpha: 0,
-      x: () => mediaFlip.x,
-      y: () => mediaFlip.y + pin.getBoundingClientRect().height * 0.4,
-      scaleX: () => mediaFlip.scaleX * 1.1,
-      scaleY: () => mediaFlip.scaleY * 1.1,
+      x: () => pin.getBoundingClientRect().width * 1.08,
+      y: 0,
     });
-    gsap.set(copyBody, { autoAlpha: 0, y: 40 });
+    gsap.set(copyBody, { autoAlpha: 0, y: 30 });
 
     const timeline = gsap.timeline({
       scrollTrigger: {
@@ -132,9 +108,9 @@ const cta = { label: 'Saber Más', url: '/nosotros' };
     });
 
     timeline
-      // Fase 1 — Media luna: el arco convexo sube desde abajo y cubre el 100% de la pantalla
-      .to(curtain, { scaleX: 1.18, scaleY: 1.18, duration: 2.1, ease: 'aboutOrganic' })
-      // Fase 2a — El título aparece primero, deslizándose desde abajo hacia el centro
+      // Fase 1 — Círculo: expansión radial uniforme desde abajo (mayor parte desbordada)
+      .to(curtain, { scale: 1, duration: 2.1, ease: 'aboutOrganic', xPercent: -50 })
+      // Fase 2a — Título aparece primero, de abajo hacia el centro
       .to(headingBlock, {
         autoAlpha: 1,
         x: () => headingFlip.x,
@@ -142,23 +118,20 @@ const cta = { label: 'Saber Más', url: '/nosotros' };
         duration: 1.05,
         ease: 'aboutOrganic',
       }, '-=0.15')
-      // Fase 2b — Después la imagen, también de abajo hacia el centro, quedando el título superpuesto
+      // Fase 2b — Imagen entra deslizándose de derecha a izquierda a su posición del grid
       .to(media, {
         autoAlpha: 1,
-        x: () => mediaFlip.x,
-        y: () => mediaFlip.y,
-        scaleX: () => mediaFlip.scaleX,
-        scaleY: () => mediaFlip.scaleY,
-        duration: 1.15,
+        x: 0,
+        y: 0,
+        duration: 1.25,
         ease: 'aboutOrganic',
-      }, '-=0.35')
-      // Pausa breve con ambos elementos superpuestos y centrados
+      }, '-=0.15')
+      // Pausa breve con título centrado e imagen ya en su celda superior
       .to({}, { duration: 0.5 })
-      // Fase 3 — Cada elemento viaja a su lugar en el grid y se revela el texto restante
-      .to(media, { x: 0, y: 0, scaleX: 1, scaleY: 1, duration: 1.35, ease: 'aboutOrganic' })
-      .to(headingBlock, { x: 0, y: 0, duration: 1.35, ease: 'aboutOrganic' }, '<0.08')
-      .to(copyBody, { autoAlpha: 1, y: 0, duration: 1.05, ease: 'power2.out' }, '<0.28')
-      // Sostiene el layout final para no saltar de golpe a la siguiente sección
+      // Fase 3 — Título viaja a su lugar en el grid y se revela el texto
+      .to(headingBlock, { x: 0, y: 0, duration: 1.2, ease: 'aboutOrganic' })
+      .to(copyBody, { autoAlpha: 1, y: 0, duration: 1.05, ease: 'power2.out' }, '<0.2')
+      // Sostiene layout final
       .to({}, { duration: 1.15 });
   });
 </script>
