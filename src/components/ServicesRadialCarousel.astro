@@ -107,10 +107,8 @@ const services = [
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const desktop = window.matchMedia('(min-width: 768px)').matches;
 
-  // Móvil / reduced: puente simplificado sin scrub complejo
+  // Reduced: puente oculto
   if (bridge && reduced) {
-    gsap.set(bridge, { autoAlpha: 0 });
-  } else if (bridge && !desktop) {
     gsap.set(bridge, { autoAlpha: 0 });
   }
 
@@ -246,5 +244,131 @@ const services = [
 
     window.addEventListener('resize', updateWheel);
     updateWheel();
+  }
+
+  // ── MÓVIL: kickers arriba/abajo → centro fade, título centro→arriba, plato invertido 1 tarjeta ──
+  if (section && pin && stage && wheel && cards.length && !reduced && !desktop) {
+    const step = 360 / cards.length;
+    const state = { rotation: 0 };
+    let activeIndex = 0;
+    const headingTitle = stage.querySelector('h2');
+    const cardsOrbit = document.querySelector('[data-services-cards]');
+    const sideLeftM = sideLeft;
+    const sideRightM = sideRight;
+
+    const updateWheelMobile = () => {
+      // Mini plato simétrico centrado — vecinos pre-renderizados para fluidez
+      const wheelW = Math.min(window.innerWidth * 3.33, 1439);
+      const radius = wheelW * 0.34;
+      wheel.style.transform = `translate(-50%, -50%) rotate(${state.rotation}deg)`;
+      cards.forEach((card, index) => {
+        const angle = 90 + index * step + state.rotation; // 90 = 6:00 abajo
+        const rad = angle * Math.PI / 180;
+        const x = Math.cos(rad) * radius;
+        const y = Math.sin(rad) * radius;
+        const dist = Math.abs((((angle - 90) % 360) + 540) % 360 - 180);
+        const focus = gsap.utils.clamp(0, 1, 1 - dist / 55);
+        const isActive = focus > 0.62;
+        gsap.set(card, {
+          x, y, xPercent: -50, yPercent: -50,
+          // vecinos ya disponibles con opacidad baja para fluidez (no 0)
+          opacity: isActive ? 0.98 : 0.22 + focus * 0.35,
+          scale: isActive ? 1 : 0.88 + focus * 0.10,
+          zIndex: Math.round(focus * 10),
+          pointerEvents: isActive ? 'auto' : 'none',
+        });
+        card.classList.toggle('is-active', isActive);
+        if (isActive) activeIndex = index;
+      });
+    };
+
+    // Estado inicial móvil: puente oculto, heading en centro
+    gsap.set(bridge, { autoAlpha: 0 });
+    if (trackSub) gsap.set(trackSub, { autoAlpha: 0 });
+    if (trackMain) gsap.set(trackMain, { autoAlpha: 0 });
+    if (pulseSub) gsap.set(pulseSub, { strokeDashoffset: 1040, autoAlpha: 1 });
+    if (pulseSubGhost) gsap.set(pulseSubGhost, { strokeDashoffset: 1040, autoAlpha: 1 });
+    if (pulseMain) gsap.set(pulseMain, { strokeDashoffset: 1000, autoAlpha: 1 });
+    if (pulseMainGhost) gsap.set(pulseMainGhost, { strokeDashoffset: 1000, autoAlpha: 1 });
+    if (sideLeftM) gsap.set(sideLeftM, { autoAlpha: 0, y: -12 });
+    if (sideRightM) gsap.set(sideRightM, { autoAlpha: 0, y: 12 });
+    gsap.set(stage, { autoAlpha: 0, filter: 'blur(8px)' });
+    if (wipe) gsap.set(wipe, { autoAlpha: 1 });
+    if (headingTitle) gsap.set(headingTitle, { autoAlpha: 0, y: 14 });
+    if (wheel) gsap.set(wheel, { autoAlpha: 0 });
+    if (cardsOrbit) gsap.set(cardsOrbit, { autoAlpha: 0 });
+
+    const bridgeEnterM = gsap.timeline({
+      scrollTrigger: { trigger: section, start: 'top 82%', end: 'top 5%', scrub: 2.2, invalidateOnRefresh: true }
+    });
+    bridgeEnterM
+      .to(bridge, { autoAlpha: 1, duration: 0.14 }, 0)
+      .to(trackSub, { autoAlpha: 1, duration: 0.18 }, 0.04)
+      .to(trackMain, { autoAlpha: 1, duration: 0.18 }, 0.06)
+      .fromTo(pulseSub, { strokeDashoffset: 1040 }, { strokeDashoffset: -260, duration: 0.78, ease: 'none' }, 0)
+      .fromTo(pulseSubGhost, { strokeDashoffset: 1040 }, { strokeDashoffset: -340, duration: 0.78, ease: 'none' }, 0.06)
+      .fromTo(pulseMain, { strokeDashoffset: 1000 }, { strokeDashoffset: -300, duration: 0.78, ease: 'none' }, 0.03)
+      .fromTo(pulseMainGhost, { strokeDashoffset: 1000 }, { strokeDashoffset: -380, duration: 0.78, ease: 'none' }, 0.09)
+      .to(sideLeftM, { autoAlpha: 1, y: 0, duration: 0.28, ease: 'power2.out' }, 0.10)
+      .to(sideRightM, { autoAlpha: 1, y: 0, duration: 0.28, ease: 'power2.out' }, 0.10)
+      .to(sideLeftM, { y: '36vh', duration: 0.42, ease: 'power1.inOut' }, 0.60)
+      .to(sideRightM, { y: '-36vh', duration: 0.42, ease: 'power1.inOut' }, 0.60)
+      .to([sideLeftM, sideRightM], { autoAlpha: 0, duration: 0.30, ease: 'power1.out' }, 0.72)
+      .to(bridge, { autoAlpha: 0, duration: 0.18 }, 0.84)
+      .to([trackSub, trackMain], { autoAlpha: 0, duration: 0.14 }, '<')
+      .to(wipe, { autoAlpha: 0, duration: 0.16 }, 0.04);
+
+    const pinnedM = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: 'top top',
+        end: '+=65%',
+        pin,
+        pinSpacing: true,
+        scrub: 1,
+        invalidateOnRefresh: true,
+        onRefresh: updateWheelMobile,
+      }
+    });
+    pinnedM
+      .fromTo(stage, { autoAlpha: 0, filter: 'blur(10px)' }, { autoAlpha: 1, filter: 'blur(0px)', duration: 0.10 }, 0)
+      // Título aparece en el centro tras el fade de kickers y queda fijo sobre el mini plato (como imagen de referencia)
+      .fromTo(headingTitle, { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.12 }, 0.02)
+      .to(wheel, { autoAlpha: 1, duration: 0.16 }, 0.18)
+      .to(cardsOrbit, { autoAlpha: 1, duration: 0.16, onComplete: updateWheelMobile }, 0.20);
+
+    // Arrastre horizontal gira solo el plato
+    let isDragging = false, startX = 0, startRot = 0;
+    const dragTarget = stage;
+    dragTarget.style.touchAction = 'pan-y';
+    dragTarget.style.cursor = 'grab';
+    dragTarget.addEventListener('pointerdown', (e) => {
+      isDragging = true; startX = e.clientX; startRot = state.rotation;
+      dragTarget.setPointerCapture(e.pointerId); dragTarget.style.cursor = 'grabbing';
+    });
+    const onMove = (e) => {
+      if (!isDragging) return;
+      const dx = e.clientX - startX;
+      state.rotation = startRot + dx * 0.45;
+      updateWheelMobile();
+    };
+    const onUp = () => {
+      if (!isDragging) return;
+      isDragging = false; dragTarget.style.cursor = 'grab';
+      // snap al más cercano
+      const snapIndex = Math.round(-state.rotation / step);
+      const clamped = gsap.utils.clamp(0, cards.length - 1, snapIndex);
+      gsap.to(state, { rotation: -clamped * step, duration: 0.45, ease: 'power2.out', onUpdate: updateWheelMobile });
+    };
+    dragTarget.addEventListener('pointermove', onMove);
+    dragTarget.addEventListener('pointerup', onUp);
+    dragTarget.addEventListener('pointercancel', onUp);
+    dragTarget.addEventListener('pointerleave', onUp);
+    // soporte touch
+    dragTarget.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; startRot = state.rotation; }, { passive: true });
+    dragTarget.addEventListener('touchmove', (e) => { state.rotation = startRot + (e.touches[0].clientX - startX) * 0.45; updateWheelMobile(); }, { passive: true });
+
+    window.addEventListener('resize', updateWheelMobile);
+    updateWheelMobile();
   }
 </script>
