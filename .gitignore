@@ -46,3 +46,5 @@ next-env.d.ts
 /.openai/
 /build/
 *.log
+/docs/conceptos
+docs/wireframe
