@@ -5,6 +5,7 @@ const logo = '/simico_largo.svg';
 const links = [
   { label: 'Inicio', href: '/' },
   { label: 'Quiénes somos', href: '/#about' },
+  { label: 'Especialidades', href: '/#especialidades' },
   { label: 'Servicios', href: '/#servicios' },
   { label: 'Proyectos', href: '/proyectos' },
 ];
@@ -30,38 +31,23 @@ const cta = { label: 'Contacto', href: '/#contacto' };
 <script>
   const header = document.querySelector('[data-header]');
   const hero = document.querySelector('#inicio');
-  const statements = document.querySelector('[data-statements]');
+  const narrative = document.querySelector('[data-narrative]');
+  const projects = document.querySelector('[data-projects-timeline]');
   const servicesPage = document.querySelector('.services-page');
   const servicesHero = document.querySelector('.services-page-hero');
   const servicesRadial = document.querySelector('[data-services-radial]');
   const toggle = document.querySelector('[data-menu-toggle]');
   const nav = document.querySelector('[data-navigation]');
+  const path = window.location.pathname.toLowerCase();
+  const isProjectsPage = path.startsWith('/proyectos');
   let lastScrollY = window.scrollY;
-  const updateScroll = () => {
+  const updateScroll = (force = false) => {
     const currentScrollY = window.scrollY;
-    const scrollingUp = currentScrollY < lastScrollY;
-    const heroBottom = hero?.getBoundingClientRect().bottom ?? 0;
-    const statementsBottom = statements?.getBoundingClientRect().bottom ?? 0;
-    const inHero = currentScrollY < (hero?.offsetHeight ?? 0) - 2;
-    const inStatements = statements && heroBottom <= 1 && statementsBottom > 1;
-    const afterStatements = statements && statementsBottom <= 1;
+    const delta = currentScrollY - lastScrollY;
+    if (!force && delta === 0) return;
+    const scrollingUp = delta < 0;
 
-    // Bloqueo estricto del header SOLO en la sección Servicios (incluye puente + carrusel)
-    // Incluso scrolleando hacia arriba debe permanecer oculto mientras Servicios esté visible
-    if (servicesRadial) {
-      const radialRect = servicesRadial.getBoundingClientRect();
-      const inServicesRadialAny = radialRect.top < window.innerHeight && radialRect.bottom > 0;
-      if (inServicesRadialAny) {
-        header?.classList.add('hide-header');
-        header?.classList.remove('scrolled', 'statements-complete');
-        lastScrollY = currentScrollY;
-        return;
-      }
-    }
-
-    // Proyectos — replica comportamiento index: oculta al bajar, muestra al subir
-    const isProyectos = document.querySelector('.grid-projects') || window.location.pathname.toLowerCase().startsWith('/proyectos');
-    if (isProyectos) {
+    if (isProjectsPage) {
       if (currentScrollY <= 12) {
         header?.classList.remove('hide-header', 'scrolled');
       } else {
@@ -91,21 +77,29 @@ const cta = { label: 'Contacto', href: '/#contacto' };
       return;
     }
 
+    const inHero = Boolean(hero && currentScrollY < (hero.offsetHeight ?? 0) - 2);
+    const narrativeRect = narrative?.getBoundingClientRect();
+    const inNarrative = Boolean(narrativeRect && narrativeRect.top < window.innerHeight && narrativeRect.bottom > 0);
+    const projectsRect = projects?.getBoundingClientRect();
+    const inProjects = Boolean(projectsRect && projectsRect.top < window.innerHeight && projectsRect.bottom > 0);
+
     if (inHero) {
-      header?.classList.remove('scrolled', 'statements-complete');
+      header?.classList.remove('scrolled');
       header?.classList.toggle('hide-header', currentScrollY > 12 && !scrollingUp);
-    } else if (inStatements) {
-      header?.classList.remove('scrolled', 'statements-complete');
+    } else if (inNarrative) {
       header?.classList.add('hide-header');
-    } else if (afterStatements) {
-      header?.classList.toggle('scrolled', scrollingUp);
+      header?.classList.remove('scrolled');
+    } else if (inProjects) {
       header?.classList.toggle('hide-header', !scrollingUp);
-      header?.classList.add('statements-complete');
+      header?.classList.toggle('scrolled', scrollingUp);
+    } else {
+      header?.classList.toggle('hide-header', currentScrollY > 12 && !scrollingUp);
+      header?.classList.toggle('scrolled', currentScrollY > 12 && scrollingUp);
     }
     lastScrollY = currentScrollY;
   };
-  window.addEventListener('scroll', updateScroll, { passive: true });
-  updateScroll();
+  window.addEventListener('scroll', () => updateScroll(), { passive: true });
+  updateScroll(true);
   toggle?.addEventListener('click', () => {
     const open = nav?.classList.toggle('open') ?? false;
     toggle.setAttribute('aria-expanded', String(open));
