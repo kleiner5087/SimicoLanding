@@ -33,9 +33,6 @@ const cta = { label: 'Contacto', href: '/#contacto' };
   const hero = document.querySelector('#inicio');
   const narrative = document.querySelector('[data-narrative]');
   const projects = document.querySelector('[data-projects-timeline]');
-  const servicesPage = document.querySelector('.services-page');
-  const servicesHero = document.querySelector('.services-page-hero');
-  const servicesRadial = document.querySelector('[data-services-radial]');
   const toggle = document.querySelector('[data-menu-toggle]');
   const nav = document.querySelector('[data-navigation]');
   const path = window.location.pathname.toLowerCase();
@@ -53,25 +50,6 @@ const cta = { label: 'Contacto', href: '/#contacto' };
       } else {
         header?.classList.toggle('hide-header', !scrollingUp);
         header?.classList.toggle('scrolled', scrollingUp);
-      }
-      lastScrollY = currentScrollY;
-      return;
-    }
-
-    if (servicesPage) {
-      const servicesHeroBottom = servicesHero?.getBoundingClientRect().bottom ?? 0;
-      const radialRect = servicesRadial?.getBoundingClientRect();
-      const inServicesHero = servicesHeroBottom > 1;
-      const inServicesRadial = Boolean(radialRect && radialRect.top <= 1 && radialRect.bottom > 1);
-
-      if (currentScrollY <= 12) {
-        header?.classList.remove('hide-header', 'scrolled');
-      } else if (inServicesRadial) {
-        header?.classList.add('hide-header');
-        header?.classList.remove('scrolled');
-      } else {
-        header?.classList.toggle('hide-header', !scrollingUp);
-        header?.classList.toggle('scrolled', scrollingUp && !inServicesHero);
       }
       lastScrollY = currentScrollY;
       return;
