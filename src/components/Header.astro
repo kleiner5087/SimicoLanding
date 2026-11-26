@@ -37,6 +37,29 @@ const cta = { label: 'Contacto', href: '/#contacto' };
   const path = window.location.pathname.toLowerCase();
   const isProjectsPage = path.startsWith('/proyectos');
   let lastScrollY = window.scrollY;
+  let heroHeight = 0;
+  const narrativeBounds = { top: 0, bottom: 0 };
+  const projectsBounds = { top: 0, bottom: 0 };
+  const measureSections = () => {
+    heroHeight = hero?.offsetHeight ?? 0;
+    const narrative = narratives.find((element) => element.getClientRects().length > 0);
+    if (narrative) {
+      const rect = narrative.getBoundingClientRect();
+      narrativeBounds.top = rect.top + window.scrollY;
+      narrativeBounds.bottom = rect.bottom + window.scrollY;
+    } else {
+      narrativeBounds.top = Number.POSITIVE_INFINITY;
+      narrativeBounds.bottom = Number.NEGATIVE_INFINITY;
+    }
+    if (projects) {
+      const rect = projects.getBoundingClientRect();
+      projectsBounds.top = rect.top + window.scrollY;
+      projectsBounds.bottom = rect.bottom + window.scrollY;
+    } else {
+      projectsBounds.top = Number.POSITIVE_INFINITY;
+      projectsBounds.bottom = Number.NEGATIVE_INFINITY;
+    }
+  };
   const updateScroll = (force = false) => {
     const currentScrollY = window.scrollY;
     const delta = currentScrollY - lastScrollY;
@@ -54,12 +77,9 @@ const cta = { label: 'Contacto', href: '/#contacto' };
       return;
     }
 
-    const inHero = Boolean(hero && currentScrollY < (hero.offsetHeight ?? 0) - 2);
-    const narrative = narratives.find((element) => element.getClientRects().length > 0);
-    const narrativeRect = narrative?.getBoundingClientRect();
-    const inNarrative = Boolean(narrativeRect && narrativeRect.top < window.innerHeight && narrativeRect.bottom > 0);
-    const projectsRect = projects?.getBoundingClientRect();
-    const inProjects = Boolean(projectsRect && projectsRect.top < window.innerHeight && projectsRect.bottom > 0);
+    const inHero = Boolean(hero && currentScrollY < heroHeight - 2);
+    const inNarrative = currentScrollY > narrativeBounds.top - window.innerHeight && currentScrollY < narrativeBounds.bottom;
+    const inProjects = currentScrollY > projectsBounds.top - window.innerHeight && currentScrollY < projectsBounds.bottom;
 
     if (inHero) {
       header?.classList.remove('scrolled');
@@ -76,7 +96,14 @@ const cta = { label: 'Contacto', href: '/#contacto' };
     }
     lastScrollY = currentScrollY;
   };
+  measureSections();
   window.addEventListener('scroll', () => updateScroll(), { passive: true });
+  window.addEventListener('resize', () => {
+    requestAnimationFrame(() => {
+      measureSections();
+      updateScroll(true);
+    });
+  }, { passive: true });
   updateScroll(true);
   toggle?.addEventListener('click', () => {
     const open = nav?.classList.toggle('open') ?? false;

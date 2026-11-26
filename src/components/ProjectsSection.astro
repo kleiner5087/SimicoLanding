@@ -80,7 +80,9 @@ import { landingProjects } from '../data/landingProjects';
         invalidateOnRefresh: true,
       },
     });
-    timeline.to(track, { x: () => -(track.scrollWidth - window.innerWidth), duration: 1, ease: 'none' }, 0);
+    timeline
+      .to({}, { duration: .14 }, 0)
+      .to(track, { x: () => -(track.scrollWidth - window.innerWidth), duration: 1, ease: 'none' }, .14);
 
     return () => {
       timeline.scrollTrigger?.kill();

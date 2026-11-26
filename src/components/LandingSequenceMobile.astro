@@ -24,8 +24,8 @@ for (let index = 0; index < 25; index++) {
     <div class="m-anchor m-anchor-especialidades" data-mobile-anchor="especialidades"></div>
 
     <div class="m-stage" data-m-stage>
-      <div class="m-plant refinery-mask" data-m-plant-gray aria-hidden="true"></div>
-      <div class="m-plant is-red refinery-mask" data-m-plant-red aria-hidden="true"></div>
+      <div class="m-plant" data-m-plant-gray aria-hidden="true"></div>
+      <div class="m-plant is-red" data-m-plant-red aria-hidden="true"></div>
       <div class="m-veil" data-m-veil aria-hidden="true"></div>
 
       <div class="m-statement" data-m-statement>
@@ -76,25 +76,27 @@ for (let index = 0; index < 25; index++) {
   </section>
 
   <section class="m-services" data-m-services data-mobile-anchor="servicios" aria-label="Carrusel de servicios">
-    <div class="m-services-stage" data-m-services-stage>
-      <div class="m-services-disc" aria-hidden="true"></div>
-      <div class="m-sector-ring" data-m-sector-ring aria-hidden="true">
-        <span></span><span></span><span></span><span></span><span></span><span></span>
+    <div class="m-services-pin">
+      <div class="m-services-stage" data-m-services-stage>
+        <div class="m-services-disc" aria-hidden="true"></div>
+        <div class="m-sector-ring" data-m-sector-ring aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <div class="m-services-pill" aria-hidden="true"></div>
+        <h2 class="m-services-title">{servicesTitle.mobile}</h2>
+        <div class="m-svc-orbit">
+          {services.map((service) => (
+            <article class="m-svc" data-m-svc-label={service.name}>
+              <svg class="m-svc-icon" aria-hidden="true"><use href={`#${service.icon}`}/></svg>
+              <h3>{service.name}</h3>
+            </article>
+          ))}
+        </div>
+        <nav class="m-service-nav" aria-label="Navegación del carrusel de servicios">
+          <button type="button" data-m-service-prev><span aria-hidden="true">←</span> Anterior</button>
+          <button type="button" data-m-service-next>Siguiente <span aria-hidden="true">→</span></button>
+        </nav>
       </div>
-      <div class="m-services-pill" aria-hidden="true"></div>
-      <h2 class="m-services-title">{servicesTitle.mobile}</h2>
-      <div class="m-svc-orbit">
-        {services.map((service) => (
-          <article class="m-svc" data-m-svc-label={service.name}>
-            <svg class="m-svc-icon" aria-hidden="true"><use href={`#${service.icon}`}/></svg>
-            <h3>{service.name}</h3>
-          </article>
-        ))}
-      </div>
-      <nav class="m-service-nav" aria-label="Navegación del carrusel de servicios">
-        <button type="button" data-m-service-prev><span aria-hidden="true">←</span> Anterior</button>
-        <button type="button" data-m-service-next>Siguiente <span aria-hidden="true">→</span></button>
-      </nav>
     </div>
   </section>
 
@@ -119,47 +121,49 @@ for (let index = 0; index < 25; index++) {
     .m-anchor-about { top:513dvh; }
     .m-anchor-especialidades { top:774dvh; }
 
-    .m-plant { position:absolute; z-index:1; top:8dvh; left:calc(50% - 80.55dvh); width:177.78dvh; height:100dvh; background:var(--gray); opacity:0; pointer-events:none; will-change:opacity; }
+    /* Máscara alpha derivada de /refineria.svg para compatibilidad móvil. */
+    .m-plant { position:absolute; z-index:1; top:8dvh; left:calc(50% - 80.55dvh); width:177.78dvh; height:100dvh; background:var(--gray); opacity:0; pointer-events:none; -webkit-mask-image:url('/refineria-mask.png'); mask-image:url('/refineria-mask.png'); -webkit-mask-size:100% 100%; mask-size:100% 100%; -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat; }
     .m-plant.is-red { z-index:2; background:var(--red); opacity:0; }
-    .m-veil { position:absolute; z-index:3; inset:0; background:var(--ink); transform-origin:50% 50%; will-change:transform,opacity; }
+    .m-veil { position:absolute; z-index:3; inset:0; background:var(--ink); transform-origin:50% 50%; }
 
     .m-statement { position:absolute; z-index:5; inset:0; display:grid; padding:0 6vw; place-items:center; color:var(--paper); text-align:center; pointer-events:none; }
     .m-statement-copy { max-width:90vw; text-align:center; }
     .m-statement-white, .m-statement-red { margin:0; font:800 clamp(24px,7.6vw,34px)/1.08 var(--sans); letter-spacing:-.01em; }
-    .m-statement-white { max-width:70vw; margin:0 auto; color:var(--paper); will-change:opacity; }
-    .m-statement-red { width:100%; color:var(--red); will-change:transform; }
+    .m-statement-white { max-width:70vw; margin:0 auto; color:var(--paper); }
+    .m-statement-red { width:100%; color:var(--red); }
     .m-red-line { position:relative; display:block; white-space:nowrap; }
-    .m-red-text { display:block; will-change:opacity; }
-    .m-line-white { position:absolute; inset:0; display:block; color:var(--paper); opacity:0; will-change:opacity; }
+    .m-red-text { display:block; }
+    .m-line-white { position:absolute; inset:0; display:block; color:var(--paper); opacity:0; }
     .m-red-line.is-white .m-red-text { opacity:0; }
     .m-red-line.is-white .m-line-white { opacity:1; }
 
-    .m-photo { position:absolute; z-index:4; left:12vw; top:8dvh; width:76vw; height:20dvh; overflow:hidden; border:1px solid #23252966; border-radius:2.5vw; background:#1c1e21; pointer-events:none; will-change:transform; }
+    .m-photo { position:absolute; z-index:4; left:12vw; top:6dvh; width:76vw; height:20dvh; overflow:hidden; border:1px solid #23252966; border-radius:2.5vw; background:#1c1e21; pointer-events:none; }
     .m-photo img { display:block; width:100%; height:100%; object-fit:cover; object-position:center 35%; }
-    .m-photo-vertical { position:absolute; z-index:9; left:31vw; top:63.5dvh; display:block; width:38vw; height:30.5dvh; overflow:hidden; border:1px solid #23252966; border-radius:3vw; background:#1c1e21; cursor:pointer; pointer-events:auto; will-change:transform; }
+    .m-photo-vertical { position:absolute; z-index:9; left:31vw; top:65.5dvh; display:block; width:38vw; height:30.5dvh; overflow:hidden; border:1px solid #23252966; border-radius:3vw; background:#1c1e21; cursor:pointer; pointer-events:auto; }
     .m-photo-vertical img { display:block; width:100%; height:100%; object-fit:cover; object-position:center 25%; }
     .m-photo-shade { position:absolute; z-index:1; inset:0; background:linear-gradient(180deg,#2325291f,#2325298c); pointer-events:none; }
-    .m-about-cta { position:absolute; z-index:2; left:50%; top:50%; width:82%; transform:translate(-50%,-50%); color:var(--paper); font:700 clamp(9px,2.8vw,11px)/1.45 var(--mono); letter-spacing:.06em; text-align:center; pointer-events:none; will-change:transform,opacity; }
+    .m-about-cta { position:absolute; z-index:2; left:50%; top:50%; width:82%; transform:translate(-50%,-50%); color:var(--paper); font:700 clamp(9px,2.8vw,11px)/1.45 var(--mono); letter-spacing:.06em; text-align:center; pointer-events:none; }
     .m-about-cta span { display:block; }
     .m-about-cta span:last-child { padding-bottom:4px; border-bottom:1px solid #fffef599; }
 
-    .m-about-copy { position:absolute; z-index:6; left:12vw; top:46dvh; width:76vw; color:var(--gray); font:400 clamp(10px,3.05vw,13px)/1.5 var(--mono); text-align:justify; pointer-events:none; will-change:transform,opacity; }
+    .m-about-copy { position:absolute; z-index:6; left:12vw; top:46dvh; width:76vw; color:#fff; font:400 clamp(11px,calc(3.05vw + 1px),14px)/1.5 var(--mono); text-align:justify; pointer-events:none; }
     .m-about-copy p { margin:0; }
 
-    .m-specials { position:absolute; z-index:6; inset:0; opacity:0; pointer-events:none; will-change:transform,opacity; }
+    .m-specials { position:absolute; z-index:6; inset:0; opacity:0; pointer-events:none; }
     .m-specials h2 { position:absolute; left:5vw; top:4dvh; margin:0; color:var(--red); font:800 clamp(20px,6vw,28px)/1.06 var(--sans); letter-spacing:-.02em; }
-    .m-spec-track { position:absolute; left:0; top:40dvh; display:flex; gap:2vw; width:max-content; padding-left:10vw; pointer-events:auto; will-change:transform; }
+    .m-spec-track { position:absolute; left:0; top:40dvh; display:flex; gap:2vw; width:max-content; padding-left:10vw; pointer-events:auto; }
     .m-spec-card { width:80vw; min-height:26dvh; padding:4.5vw; border:1px solid #23252922; background:var(--paper); color:var(--ink); font:400 clamp(10px,3.05vw,13px)/1.4 var(--mono); }
     .m-spec-card .num { display:block; margin-bottom:8px; color:var(--red); font:700 10px/1 var(--mono); letter-spacing:.08em; }
     .m-spec-card h3 { margin:0 0 6px; font:800 clamp(18px,5.6vw,24px)/1.02 var(--sans); letter-spacing:-.02em; }
     .m-spec-card p { margin:0; }
 
-    .m-flood { position:absolute; z-index:8; left:0; right:0; bottom:0; height:100%; background:var(--red); pointer-events:none; will-change:transform; }
+    .m-flood { position:absolute; z-index:8; left:0; right:0; bottom:0; height:100%; background:var(--red); pointer-events:none; }
 
     .m-services { position:relative; height:520dvh; margin-top:-1px; overflow:visible; background:var(--red); color:var(--ink); }
-    .m-services-stage { position:sticky; z-index:3; top:0; height:100dvh; overflow:hidden; background:var(--red); isolation:isolate; will-change:transform,opacity; }
+    .m-services-pin { position:sticky; z-index:3; top:0; height:100dvh; overflow:hidden; background:var(--red); }
+    .m-services-stage { position:absolute; inset:0; overflow:hidden; background:var(--red); isolation:isolate; will-change:transform,opacity; }
     .m-services-disc { position:absolute; z-index:1; left:50%; top:0; width:168dvh; height:168dvh; border-radius:50%; background:var(--ring); transform:translate(-50%,-50%); }
-    .m-sector-ring { position:absolute; z-index:2; left:50%; top:0; width:0; height:0; will-change:transform; }
+    .m-sector-ring { position:absolute; z-index:2; left:50%; top:0; width:0; height:0; }
     .m-sector-ring span { position:absolute; left:0; top:0; width:105dvh; height:1px; background:#23252988; transform-origin:left center; }
     .m-sector-ring span:nth-child(1) { transform:rotate(0deg); }
     .m-sector-ring span:nth-child(2) { transform:rotate(60deg); }
@@ -170,7 +174,7 @@ for (let index = 0; index < 25; index++) {
     .m-services-pill { position:absolute; z-index:3; left:50%; top:-103dvh; width:230vw; height:140dvh; border-radius:50%; background:var(--red); transform:translateX(-50%); }
     .m-services-title { position:absolute; z-index:4; left:50%; top:12.5dvh; margin:0; transform:translateX(-50%); color:#fff; font:800 clamp(24px,6.7vw,32px)/1 var(--sans); letter-spacing:.08em; text-align:center; white-space:nowrap; }
     .m-svc-orbit { position:absolute; z-index:5; inset:0; pointer-events:none; }
-    .m-svc { position:absolute; z-index:1; left:50%; top:0; display:flex; width:76vw; transform:translate(-50%,-50%); flex-direction:column; align-items:center; color:var(--ink); text-align:center; opacity:0; pointer-events:none; will-change:transform,opacity; }
+    .m-svc { position:absolute; z-index:1; left:50%; top:0; display:flex; width:76vw; transform:translate(-50%,-50%); flex-direction:column; align-items:center; color:var(--ink); text-align:center; opacity:0; pointer-events:none; }
     .m-svc-icon { width:30px; height:30px; opacity:.95; }
     .m-svc h3 { max-width:76vw; margin:10dvh 0 0; font:800 clamp(14px,4.1vw,18px)/1.15 var(--sans); letter-spacing:-.01em; }
     .m-svc.is-active { opacity:1; }
@@ -244,7 +248,7 @@ for (let index = 0; index < 25; index++) {
         floodEnd: .995,
       };
 
-      const startPhotoOffset = () => window.innerHeight * .92;
+      const startPhotoOffset = () => window.innerHeight * 1.05;
       let redOffset = 0;
       let specIndex = 0;
 
@@ -320,6 +324,17 @@ for (let index = 0; index < 25; index++) {
         .to(plantGray, { autoAlpha: 0, duration: P.colorEnd - P.color, ease: 'none' }, P.color)
         .to(flood, { yPercent: 0, duration: P.floodEnd - P.flood, ease: 'none' }, P.flood)
         .to({}, { duration: .005 }, P.floodEnd);
+
+      const hero = document.querySelector('#inicio');
+      let flowTop = flow.getBoundingClientRect().top + window.scrollY;
+      const updateHeroPark = () => hero?.classList.toggle('is-flow-covered', window.scrollY >= flowTop);
+      const measureHeroPark = () => {
+        flowTop = flow.getBoundingClientRect().top + window.scrollY;
+        updateHeroPark();
+      };
+      measureHeroPark();
+      window.addEventListener('scroll', updateHeroPark, { passive: true });
+      window.addEventListener('resize', measureHeroPark, { passive: true });
 
       const goSpecStep = (index) => {
         if (!flow) return;
@@ -403,7 +418,7 @@ for (let index = 0; index < 25; index++) {
         const entry = Math.min(1, Math.max(0, progress / .2));
         gsap.set(servicesStage, {
           y: (1 - entry) * -window.innerHeight,
-          opacity: progress > .0001 ? 1 : 0,
+          opacity: entry,
         });
         const t = Math.min(1, Math.max(0, (progress - .2) / .75));
         const rawIndex = Math.round(t * (serviceLabels.length - 1));
@@ -453,8 +468,8 @@ for (let index = 0; index < 25; index++) {
         setWhite(.08);
         pixelTrigger = ScrollTrigger.create({
           trigger: pixelGrid,
-          start: 'top 85%',
-          end: 'top 0%',
+          start: 'top top',
+          end: 'bottom top',
           invalidateOnRefresh: true,
           onRefresh: (self) => setPixelProgress(self.progress),
           onUpdate: (self) => setPixelProgress(self.progress),
@@ -471,6 +486,9 @@ for (let index = 0; index < 25; index++) {
         servicesStage?.removeEventListener('touchend', onServiceTouchEnd);
         serviceTrigger?.kill();
         pixelTrigger?.kill();
+        window.removeEventListener('scroll', updateHeroPark);
+        window.removeEventListener('resize', measureHeroPark);
+        hero?.classList.remove('is-flow-covered');
         stage.classList.remove('is-specialties');
         redLines.forEach((line) => line.classList.remove('is-white'));
         pixelCells.forEach((cell) => cell.classList.remove('is-white'));

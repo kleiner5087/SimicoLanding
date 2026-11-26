@@ -57,6 +57,7 @@
 
     gsap.set(contact, { xPercent: 100 });
 
+    const isDesktop = () => window.matchMedia('(min-width: 768px)').matches;
     let hasBlocked = false;
     const blockScroll = (ms = 1100) => {
       if (hasBlocked) return;
@@ -91,7 +92,7 @@
         anticipatePin: 1,
         invalidateOnRefresh: true,
         onUpdate: (self) => {
-          if (self.progress >= 0.92 && !hasBlocked) {
+          if (self.progress >= 0.92 && !hasBlocked && isDesktop()) {
             blockScroll(1300);
           }
         },
@@ -103,8 +104,10 @@
     tl.from('.contact-inner', { x: 60, ease: 'none', duration: 0.55 }, 0);
     tl.to({}, { duration: 0.20 }); // hold: Contact ya cubre CTA, se mantiene antes de ir al footer
 
-    // Bloqueo adicional al completar la superposición, por si el usuario hace scroll muy rápido
-    tl.eventCallback('onComplete', () => blockScroll(800));
+    // Bloqueo adicional al completar la superposición, solo en desktop.
+    tl.eventCallback('onComplete', () => {
+      if (isDesktop()) blockScroll(800);
+    });
 
     return () => {
       tl.kill();
