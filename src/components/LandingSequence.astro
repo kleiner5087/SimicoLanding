@@ -1,63 +1,53 @@
 ---
 import about1 from '../assets/aboutus1.jpg';
 import about2 from '../assets/aboutus2.jpg';
+import { about, narrativeStatement, services, servicesTitle, specialties } from '../data/landing';
+
+const specialtyPositions = [
+  { left: '9%', top: '19%' },
+  { left: '39%', top: '34%' },
+  { left: '69%', top: '15%' },
+];
 ---
 
 <div class="landing-sequence" data-narrative>
   <section id="flow" class="flow" data-flow aria-label="Secuencia del tubo">
-    <div id="about" class="f7-anchor" style="top:2600px"></div>
-    <div id="especialidades" class="f7-anchor" style="top:8000px"></div>
+    <div id="about" class="f7-anchor" data-desktop-anchor="about" style="top:2600px"></div>
+    <div id="especialidades" class="f7-anchor" data-desktop-anchor="especialidades" style="top:8000px"></div>
     <div class="stage" data-stage>
       <svg class="pipe" data-pipe viewBox="86 120 650 137" preserveAspectRatio="none" shape-rendering="geometricPrecision" aria-hidden="true">
         <path fill="currentColor" d="M399 122 C450 121 506 120 555 120 C584 120 605 130 630 145 C665 167 700 207 736 257 C711 257 681 255 650 255 C638 255 627 255 617 255 C607 237 593 220 576 210 C556 197 535 196 510 196 C463 196 414 196 365 196 C315 196 265 196 220 196 C198 196 177 199 163 211 C153 220 149 233 146 245 C126 245 105 245 86 244 C94 217 107 191 124 169 C143 147 168 134 198 128 C229 122 266 124 300 123 C335 123 368 122 399 122 Z"/>
       </svg>
 
       <div class="act continuum-statement" data-statement>
-        <p>DONDE LOS MÉTODOS CONVENCIONALES<br>ALCANZAN SU LÍMITE,<br><span class="continuum-red">SIMICO TOMA EL CONTROL.</span></p>
+        <p>{narrativeStatement.whiteLines[0]}<br>{narrativeStatement.whiteLines[1]}<br><span class="continuum-red">{narrativeStatement.redText}</span></p>
       </div>
 
       <div class="act continuum-about" data-about>
         <div class="continuum-about-wordmark" data-wordmark>SIMICO</div>
         <div class="continuum-about-copy" data-copy>
-          <p>SIMICO es una empresa mexicana de servicios industriales para el sector energético. Trabajamos por proyectos: recibimos misiones técnicas complejas y las llevamos a término con control, plan claro y ejecución certificada de principio a fin.</p>
-          
+          <p>{about.desktopCopy}</p>
         </div>
         <div class="continuum-about-plate" data-plate><b>SIMICO / SERVICIOS INDUSTRIALES</b>TABASCO, MX<br>INGENIERÍA · MANTENIMIENTO · CONSTRUCCIÓN</div>
-        <a class="continuum-about-cta" href="#especialidades" data-cta>Conocer la operación →</a>
+        <a class="continuum-about-cta" href={about.cta.href} data-cta>{about.cta.label} →</a>
         <img class="continuum-about-photo one" data-photo-one src={about1.src} alt="Operación nocturna de SIMICO con personal en campo y antorcha de planta" loading="lazy">
         <img class="continuum-about-photo two" data-photo-two src={about2.src} alt="Izaje de equipo industrial por personal de SIMICO" loading="lazy">
       </div>
 
-      <div class="plant" data-plant aria-hidden="true"></div>
-      <div class="plant is-red" data-plant-red aria-hidden="true"></div>
+      <div class="plant refinery-mask" data-plant aria-hidden="true"></div>
+      <div class="plant is-red refinery-mask" data-plant-red aria-hidden="true"></div>
 
-      <div class="spec-block" data-spec-block style="left:9%;top:19%">
-        <span class="num">01</span>
-        <h4>Ingeniería</h4>
-        <div class="spec-copy">
-          <p class="body-red" data-spec-red>La misión compleja se resuelve antes de mover un equipo.</p>
-          <p class="body-ink" data-spec-ink>La misión compleja se resuelve antes de mover un equipo.</p>
+      {specialties.map((specialty, index) => (
+        <div class="spec-block" data-spec-block style={`left:${specialtyPositions[index].left};top:${specialtyPositions[index].top}`}>
+          <span class="num">{specialty.number}</span>
+          <h4>{specialty.title}</h4>
+          <div class="spec-copy">
+            <p class="body-red" data-spec-red>{specialty.body}</p>
+            <p class="body-ink" data-spec-ink>{specialty.body}</p>
+          </div>
+          <span class="leader"></span>
         </div>
-        <span class="leader"></span>
-      </div>
-      <div class="spec-block" data-spec-block style="left:39%;top:34%">
-        <span class="num">02</span>
-        <h4>Mantenimiento</h4>
-        <div class="spec-copy">
-          <p class="body-red" data-spec-red>La operación continúa: cada paro se planea.</p>
-          <p class="body-ink" data-spec-ink>La operación continúa: cada paro se planea.</p>
-        </div>
-        <span class="leader"></span>
-      </div>
-      <div class="spec-block" data-spec-block style="left:69%;top:15%">
-        <span class="num">03</span>
-        <h4>Construcción</h4>
-        <div class="spec-copy">
-          <p class="body-red" data-spec-red>La obra se entrega como se aprobó.</p>
-          <p class="body-ink" data-spec-ink>La obra se entrega como se aprobó.</p>
-        </div>
-        <span class="leader"></span>
-      </div>
+      ))}
       <div class="flood" data-flood aria-hidden="true"><span class="line"></span></div>
 
     </div>
@@ -67,47 +57,6 @@ import about2 from '../assets/aboutus2.jpg';
   </section>
 
 
-
-<svg class="icon-defs" aria-hidden="true" focusable="false">
-  <symbol id="svc-redes" viewBox="0 0 24 24">
-    <path fill="currentColor" fill-rule="evenodd" d="M12 2 7.2 22h2.7l1-5h2.2l1 5h2.7L12 2Zm-1.5 7.5h3l.7 3H9.8l.7-3Zm-.7 5h3.6l.6 2.7h-4.8l.6-2.7Z"/>
-    <rect x="2" y="7.7" width="20" height="1.6" fill="currentColor"/>
-    <rect x="0" y="6.9" width="2.8" height="1.2" fill="currentColor"/>
-    <rect x="21.2" y="6.9" width="2.8" height="1.2" fill="currentColor"/>
-    <rect x="4.5" y="13" width="15" height="1.4" fill="currentColor"/>
-  </symbol>
-  <symbol id="svc-caminos" viewBox="0 0 24 24">
-    <rect x="2" y="16" width="20" height="3" fill="currentColor"/>
-    <path fill="currentColor" d="M3 16C6.5 6.8 17.5 6.8 21 16h-2.3C15.8 9.8 8.2 9.8 5.3 16H3Z"/>
-    <rect x="4.8" y="19" width="2.2" height="3.2" fill="currentColor"/>
-    <rect x="17" y="19" width="2.2" height="3.2" fill="currentColor"/>
-    <rect x="11.4" y="16" width="1.2" height="3" fill="currentColor"/>
-  </symbol>
-  <symbol id="svc-tuberias" viewBox="0 0 24 24">
-    <rect x="3" y="10" width="18" height="4" fill="currentColor"/>
-    <path fill="currentColor" fill-rule="evenodd" d="M2 8h3v8H2V8Zm1.1 2.2h.9v3.6h-.9v-3.6ZM19 8h3v8h-3V8Zm1.1 2.2h.9v3.6h-.9v-3.6Z"/>
-    <rect x="11" y="6.2" width="2" height="3.8" fill="currentColor"/>
-    <circle cx="12" cy="5.2" r="2" fill="currentColor"/>
-  </symbol>
-  <symbol id="svc-soldadura" viewBox="0 0 24 24">
-    <path fill="currentColor" fill-rule="evenodd" d="M7 3h10l3 3 1 6-1 6c-1 3-4 4-7 4h-3c-3 0-6-2-7-5l-1-5 1-6 3-3Zm1 6v5h8V9H8Z"/>
-    <rect x="9" y="1" width="8" height="3" rx="1" fill="currentColor"/>
-    <rect x="0" y="10" width="3" height="3" fill="currentColor"/>
-    <rect x="21" y="10" width="3" height="3" fill="currentColor"/>
-    <rect x="8" y="16" width="8" height="1.2" fill="currentColor"/>
-    <rect x="10.5" y="18.2" width="3" height="1.2" fill="currentColor"/>
-    </symbol>
-  <symbol id="svc-civil" viewBox="0 0 24 24">
-    <path fill="currentColor" d="M3.2 8.6 12.1 4l4.1 8-8.9 4.6-4.1-8Z"/>
-    <path fill="currentColor" d="M15.6 3.4 19 1.8l2.6 5.2-3.4 1.6-2.6-5.2Z"/>
-    <rect x="3" y="19" width="18" height="3" fill="currentColor"/>
-    <rect x="3" y="16.3" width="8.4" height="2.4" fill="currentColor"/>
-    <rect x="12.6" y="16.3" width="8.4" height="2.4" fill="currentColor"/>
-  </symbol>
-  <symbol id="svc-mecanica" viewBox="0 0 24 24">
-    <path fill="currentColor" fill-rule="evenodd" d="M8 2h8v3.2h-1.8v3c0 3.2 5 3.2 5 7.2 0 4.5-3.2 6.6-7.2 6.6-3.1 0-6-2-6-5h3c0 1.6 1.1 2.4 3 2.4 2.3 0 4.2-1.3 4.2-3.8 0-2.6-4.8-3-4.8-7.3V5.2H8V2Zm3 1.2v1h2v-1h-2Z"/>
-  </symbol>
-</svg>
 
 <div id="f5">
 <section class="services-flow" data-flow aria-label="Carrusel de servicios">
@@ -122,32 +71,14 @@ import about2 from '../assets/aboutus2.jpg';
         <span style="transform:rotate(240deg)"></span>
         <span style="transform:rotate(300deg)"></span>
       </div>
-      <div class="title-pill"><h1>Nuestros<br>Servicios</h1></div>
+      <div class="title-pill"><h1>{servicesTitle.desktop[0]}<br>{servicesTitle.desktop[1]}</h1></div>
       <div class="labels" data-labels>
-        <article class="svc" data-label="Tendido de redes eléctricas">
-          <h3>Tendido de redes eléctricas</h3>
-          <svg class="svc-icon" aria-hidden="true"><use href="#svc-redes"/></svg>
-        </article>
-        <article class="svc" data-label="Caminos y puentes">
-          <h3>Caminos y puentes</h3>
-          <svg class="svc-icon" aria-hidden="true"><use href="#svc-caminos"/></svg>
-        </article>
-        <article class="svc" data-label="Tendido de tuberías de proceso">
-          <h3>Tendido de tuberías de proceso</h3>
-          <svg class="svc-icon" aria-hidden="true"><use href="#svc-tuberias"/></svg>
-        </article>
-        <article class="svc" data-label="Soldadura industrial">
-          <h3>Soldadura industrial</h3>
-          <svg class="svc-icon" aria-hidden="true"><use href="#svc-soldadura"/></svg>
-        </article>
-        <article class="svc" data-label="Obra civil">
-          <h3>Obra civil</h3>
-          <svg class="svc-icon" aria-hidden="true"><use href="#svc-civil"/></svg>
-        </article>
-        <article class="svc" data-label="Obra mecánica y montaje industrial">
-          <h3>Obra mecánica y montaje industrial</h3>
-          <svg class="svc-icon" aria-hidden="true"><use href="#svc-mecanica"/></svg>
-        </article>
+        {services.map((service) => (
+          <article class="svc" data-label={service.name}>
+            <h3>{service.name}</h3>
+            <svg class="svc-icon" aria-hidden="true"><use href={`#${service.icon}`}/></svg>
+          </article>
+        ))}
       </div>
       </div>
       <nav class="f5-nav" data-nav aria-label="Navegación del carrusel de servicios">
@@ -155,7 +86,7 @@ import about2 from '../assets/aboutus2.jpg';
         <button type="button" data-next>Siguiente <span aria-hidden="true">→</span></button>
       </nav>
     </div>
-    <div id="servicios" class="step-anchor" data-step-anchor aria-hidden="true"></div>
+    <div id="servicios" class="step-anchor" data-step-anchor data-desktop-anchor="servicios" aria-hidden="true"></div>
   </section>
 </div>
 
@@ -172,17 +103,11 @@ import about2 from '../assets/aboutus2.jpg';
 
 <style>
   .landing-sequence{
-    --ink:#232529;
-    --paper:#fffef5;
-    --gray:#b6b9bd;
-    --mono:Consolas,"Courier New",monospace; --sans:Arial,Helvetica,sans-serif;
-    --pipe:#232529;
-    --ring:#f7efed;
+    --pipe:var(--dark);
   }
 
   html{scroll-behavior:auto}
   body{overflow-x:clip}
-  .icon-defs{position:absolute;width:0;height:0;overflow:hidden}
 
   /* Secuencia pineada: el escenario es el mismo durante 1220vh */
   .flow{position:relative;height:1220vh;background:var(--paper)}
@@ -216,16 +141,6 @@ import about2 from '../assets/aboutus2.jpg';
   /* Planta: máscara desde /refineria.svg; se estira al escenario para alinear con la tubería final */
   .plant{
     position:absolute;z-index:1;inset:0;background:currentColor;
-    -webkit-mask-image:linear-gradient(#fff,#fff),url('/refineria.svg');
-    mask-image:linear-gradient(#fff,#fff),url('/refineria.svg');
-    -webkit-mask-mode:luminance,luminance;
-    mask-mode:luminance,luminance;
-    -webkit-mask-size:100% 100%;
-    mask-size:100% 100%;
-    -webkit-mask-repeat:no-repeat;
-    mask-repeat:no-repeat;
-    -webkit-mask-composite:xor;
-    mask-composite:exclude;
     opacity:0;color:var(--gray);pointer-events:none;will-change:opacity
   }
   .plant.is-red{color:var(--red);opacity:0}
@@ -262,6 +177,11 @@ import about2 from '../assets/aboutus2.jpg';
   :global(.reduced) .spec-copy .body-ink{opacity:1}
   :global(.reduced) .spec-copy .body-red{display:none}
   :global(.reduced) .flood{position:relative;height:34vh;transform:none!important;opacity:1!important}
+
+  /* La experiencia móvil normal vive en LandingSequenceMobile.astro. */
+  @media (max-width:767px) and (prefers-reduced-motion: no-preference){
+    .landing-sequence{display:none}
+  }
 
   @media (max-width:767px){
     .continuum-about-copy{left:8%;width:70%;top:42%}
@@ -330,347 +250,362 @@ import about2 from '../assets/aboutus2.jpg';
   import { gsap } from 'gsap';
   import { ScrollTrigger } from 'gsap/ScrollTrigger';
   gsap.registerPlugin(ScrollTrigger);
-    const flow = document.querySelector('[data-flow]');
-    const pipe = document.querySelector('[data-pipe]');
-    const statement = document.querySelector('[data-statement]');
-    const about = document.querySelector('[data-about]');
-    const photos = [...document.querySelectorAll('.continuum-about-photo')];
-    const copy = document.querySelector('[data-copy]');
-    const wordmark = document.querySelector('[data-wordmark]');
-    const plate = document.querySelector('[data-plate]');
-    const cta = document.querySelector('[data-cta]');
-    const plant = document.querySelector('[data-plant]');
-    const plantRed = document.querySelector('[data-plant-red]');
-    const specAnchor = document.querySelector('[data-spec-anchor]');
-    const contentAnchor = document.querySelector('[data-content-anchor]');
-    const colorAnchor = document.querySelector('[data-color-anchor]');
-    const specBlocks = [...document.querySelectorAll('[data-spec-block]')];
-    const specBodiesRed = [...document.querySelectorAll('[data-spec-red]')];
-    const specBodiesInk = [...document.querySelectorAll('[data-spec-ink]')];
-    const flood = document.querySelector('[data-flood]');
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const desktop = window.matchMedia('(min-width: 768px)').matches;
 
-    const pipeTarget = () => {
-      const cs = getComputedStyle(pipe);
-      return {
-        left: parseFloat(cs.left),
-        top: parseFloat(cs.top),
-        width: parseFloat(cs.width),
-        height: parseFloat(cs.height)
-      };
+  const reducedMedia = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const syncReducedClass = () => document.body.classList.toggle('reduced', reducedMedia.matches);
+  syncReducedClass();
+  reducedMedia.addEventListener('change', syncReducedClass);
+
+  const mm = gsap.matchMedia();
+
+  const flow = document.querySelector('[data-flow]');
+  const pipe = document.querySelector('[data-pipe]');
+  const statement = document.querySelector('[data-statement]');
+  const about = document.querySelector('[data-about]');
+  const photos = [...document.querySelectorAll('.continuum-about-photo')];
+  const copy = document.querySelector('[data-copy]');
+  const wordmark = document.querySelector('[data-wordmark]');
+  const plate = document.querySelector('[data-plate]');
+  const cta = document.querySelector('[data-cta]');
+  const plant = document.querySelector('[data-plant]');
+  const plantRed = document.querySelector('[data-plant-red]');
+  const specAnchor = document.querySelector('[data-spec-anchor]');
+  const contentAnchor = document.querySelector('[data-content-anchor]');
+  const colorAnchor = document.querySelector('[data-color-anchor]');
+  const specBlocks = [...document.querySelectorAll('[data-spec-block]')];
+  const specBodiesRed = [...document.querySelectorAll('[data-spec-red]')];
+  const specBodiesInk = [...document.querySelectorAll('[data-spec-ink]')];
+  const flood = document.querySelector('[data-flood]');
+
+  const pipeTarget = () => {
+    const cs = getComputedStyle(pipe);
+    return {
+      left: parseFloat(cs.left),
+      top: parseFloat(cs.top),
+      width: parseFloat(cs.width),
+      height: parseFloat(cs.height)
     };
-    const pipeBand = () => (76 / 137) * pipeTarget().height;
-    const pipeOffset = () => (30.5 / 137) * pipeTarget().height;
-    const pipeBaseScale = () => window.innerWidth / pipeBand();
-    const pipeStartScale = () => pipeBaseScale() * 1.06;
-    const pipeAboutScale = () => pipeBaseScale() * .589;
-    const pipeState = (scale) => {
-      const target = pipeTarget();
-      return {
-        rotation: 90,
-        scale,
-        x: window.innerWidth / 2 - (target.left + target.width / 2) - pipeOffset() * scale,
-        y: window.innerHeight / 2 - (target.top + target.height / 2)
-      };
+  };
+  const pipeBand = () => (76 / 137) * pipeTarget().height;
+  const pipeOffset = () => (30.5 / 137) * pipeTarget().height;
+  const pipeBaseScale = () => window.innerWidth / pipeBand();
+  const pipeStartScale = () => pipeBaseScale() * 1.06;
+  const pipeAboutScale = () => pipeBaseScale() * .589;
+  const pipeState = (scale) => {
+    const target = pipeTarget();
+    return {
+      rotation: 90,
+      scale,
+      x: window.innerWidth / 2 - (target.left + target.width / 2) - pipeOffset() * scale,
+      y: window.innerHeight / 2 - (target.top + target.height / 2)
     };
-
-    if (reduced || !desktop) {
-      document.body.classList.add('reduced');
-      statement.style.opacity = '1';
-      about.style.opacity = '1';
-      plant.style.opacity = '1';
-    } else {
-      gsap.registerPlugin(ScrollTrigger);
-      gsap.set(statement, { autoAlpha: 0, y: 22 });
-      gsap.set(about, { autoAlpha: 0 });
-      gsap.set([wordmark, copy, plate, cta], { autoAlpha: 0, y: 16 });
-      gsap.set(photos, { autoAlpha: 0 });
-      gsap.set(photos[0], { x: -36 });
-      gsap.set(photos[1], { x: 36 });
-      gsap.set(plant, { autoAlpha: 0 });
-      gsap.set(pipe, { autoAlpha: 1, transformOrigin: '50% 50%', ...pipeState(pipeStartScale()) });
-      gsap.set(specBlocks, { autoAlpha: 0, y: 18 });
-      gsap.set(specBodiesRed, { autoAlpha: 1 });
-      gsap.set(specBodiesInk, { autoAlpha: 0 });
-      gsap.set(plantRed, { autoAlpha: 0 });
-      gsap.set(flood, { yPercent: 100, autoAlpha: 1 });
-
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: flow,
-          start: 'top top',
-          end: () => '+=' + window.innerHeight * 8.8,
-          scrub: 1.15,
-          invalidateOnRefresh: true
-        }
-      });
-
-      window.__f3tl = tl;
-      tl
-        .to(statement, { autoAlpha: 1, y: 0, duration: .04 }, 0)
-        .to(statement, { autoAlpha: 0, duration: .04 }, .09)
-        .to(pipe, {
-          scale: () => pipeAboutScale(),
-          x: () => pipeState(pipeAboutScale()).x,
-          y: () => pipeState(pipeAboutScale()).y,
-          duration: .16,
-          ease: 'none'
-        }, .10)
-        .to(about, { autoAlpha: 1, duration: .05 }, .24)
-        .to(wordmark, { autoAlpha: 1, y: 0, duration: .05 }, .24)
-        .to(photos, { autoAlpha: 1, x: 0, duration: .07, stagger: .02, ease: 'power2.out' }, .25)
-        .to([copy, plate, cta], { autoAlpha: 1, y: 0, duration: .06, stagger: .02, ease: 'power2.out' }, .27)
-        .to({}, { duration: .19 })
-        .to(photos, { autoAlpha: 0, x: (i) => i ? 36 : -36, duration: .05, ease: 'power1.in' }, .50)
-        .to([wordmark, copy, plate, cta], { autoAlpha: 0, y: -28, duration: .05, ease: 'power1.in' }, .50)
-        .to(pipe, { rotation: 0, scale: 1, x: 0, y: 0, duration: .24, ease: 'power2.inOut' }, .52)
-        .to(about, { autoAlpha: 0, duration: .04 }, .54)
-        .to(plant, { autoAlpha: 1, duration: .03, ease: 'none' }, .76)
-        .to(pipe, { autoAlpha: 0, duration: .03 }, .78)
-        .to({}, { duration: .22 });
-
-      ScrollTrigger.addEventListener('refreshInit', () => {
-        if (tl.progress() < .10) gsap.set(pipe, pipeState(pipeStartScale()));
-      });
-
-      const contentTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: contentAnchor,
-          start: 'top top',
-          end: () => '+=' + window.innerHeight * .112,
-          scrub: 1,
-          invalidateOnRefresh: true
-        }
-      });
-      window.__f4content = contentTl;
-      contentTl.to(specBlocks, { autoAlpha: 1, y: 0, duration: .08, stagger: .015, ease: 'power2.out' }, 0);
-
-      const colorTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: colorAnchor,
-          start: 'top top',
-          end: () => '+=' + window.innerHeight * 1.008,
-          scrub: 1.1,
-          invalidateOnRefresh: true
-        }
-      });
-      window.__f4color = colorTl;
-      colorTl
-        .to(plantRed, { autoAlpha: 1, duration: .14, ease: 'none' }, 0)
-        .to(plant, { autoAlpha: 0, duration: .14, ease: 'none' }, 0)
-        .to(specBodiesRed, { autoAlpha: 0, duration: .14, ease: 'none' }, 0)
-        .to(specBodiesInk, { autoAlpha: 1, duration: .14, ease: 'none' }, 0);
-
-      const specTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: specAnchor,
-          start: 'top top',
-          end: () => '+=' + window.innerHeight * 2.4,
-          scrub: 1.1,
-          invalidateOnRefresh: true
-        }
-      });
-      window.__f4spec = specTl;
-      specTl
-        .to(specBlocks, { autoAlpha: 0, y: -10, duration: .08, stagger: .01, ease: 'power1.in' }, .42)
-        .to(flood, { yPercent: 0, duration: .36, ease: 'none' }, .60)
-        .to({}, { duration: .04 });
-    }
-
-    // Debug de captura: ?static=1&p=0.32 (F3) · ?static=1&s=0.30 (F4)
-    const params = new URLSearchParams(location.search);
-    const debugP = Number(params.get('p'));
-    const debugS = Number(params.get('s'));
-    const staticPreview = params.get('static') === '1';
-    const hasP = Number.isFinite(debugP) && debugP > 0;
-    const hasS = params.has('s') && Number.isFinite(debugS);
-    if (staticPreview) document.body.classList.add('static-preview');
-    if (!reduced && desktop && (hasP || hasS) && window.__f3tl) {
-      requestAnimationFrame(() => {
-        if (staticPreview) {
-          [window.__f3tl, window.__f4content, window.__f4color, window.__f4spec].forEach(tl => {
-            if (!tl) return;
-            tl.scrollTrigger?.kill();
-            tl.scrollTrigger = null;
-            tl.pause();
-          });
-        } else {
-          const y = hasS ? specAnchor.getBoundingClientRect().top + window.scrollY : flow.offsetTop;
-          window.scrollTo(0, y);
-        }
-        const overall = hasS
-          ? Math.round((8.8 + Math.min(1, Math.max(0, debugS)) * 2.4) / 11.2 * 100)
-          : Math.round(Math.min(1, Math.max(0, debugP)) * 8.8 / 11.2 * 100);
-        if (hasS) window.__f3tl.progress(1).pause();
-        else window.__f3tl.progress(Math.min(1, Math.max(0, debugP))).pause();
-        if (window.__f4content) window.__f4content.progress(overall >= 70 ? 1 : 0).pause();
-        if (window.__f4color) window.__f4color.progress(Math.min(1, Math.max(0, (overall - 76) / 9))).pause();
-        if (window.__f4spec) window.__f4spec.progress(hasS ? Math.min(1, Math.max(0, debugS)) : 0).pause();
-      });
-    }
-
-(() => {
-  const root = document.querySelector('#f5');
-
-  const flow = root.querySelector('[data-flow]');
-  const carousel = root.querySelector('[data-carousel]');
-  const stepAnchor = root.querySelector('[data-step-anchor]');
-  const lines = root.querySelector('[data-lines]');
-  const labels = [...root.querySelectorAll('[data-label]')];
-  const prev = root.querySelector('[data-prev]');
-  const next = root.querySelector('[data-next]');
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const desktop = window.matchMedia('(min-width: 768px)').matches;
-  const step = 360 / labels.length;
-  const state = { rotation: 0 };
-  let activeIndex = 0;
-
-  const update = () => {
-    const measured = labels.map((el, index) => {
-      const angle = 90 + index * step + state.rotation;
-      const rad = angle * Math.PI / 180;
-      const dist = Math.abs((((angle - 90) % 360) + 540) % 360 - 180);
-      return { el, index, angle, rad, dist };
-    });
-    activeIndex = measured.reduce((best, item) => item.dist < best.dist ? item : best, measured[0]).index;
-    measured.forEach(({ el, index, angle, dist }) => {
-      const isActive = index === activeIndex;
-      const isSide = dist < 90;
-      const radius = isActive ? 18.3 : 22.4;
-      const rad = angle * Math.PI / 180;
-      const x = 50 + Math.cos(rad) * radius;
-      let y = 0 + Math.sin(rad) * radius;
-      if (isSide && !isActive) y -= 2.8;
-      gsap.set(el, {
-        left: x + 'vw',
-        top: y + 'vw',
-        xPercent: -50,
-        yPercent: -50,
-        opacity: isActive ? 1 : isSide ? .82 : 0,
-        scale: isActive ? 1 : isSide ? .9 : .82,
-        zIndex: isActive ? 20 : isSide ? 10 : 0
-      });
-      el.classList.toggle('is-active', isActive);
-    });
-    gsap.set(lines, { rotation: state.rotation });
-    prev.disabled = activeIndex === 0;
-    next.disabled = activeIndex === labels.length - 1;
   };
 
-  let navigateToCard = (index) => {
-    const target = Math.max(0, Math.min(labels.length - 1, index));
-    gsap.to(state, { rotation: -step * target, duration: .65, ease: 'power2.inOut', onUpdate: update });
-  };
+  mm.add('(min-width: 768px) and (prefers-reduced-motion: no-preference)', () => {
+    if (!flow || !pipe || !statement || !about || !plant || !plantRed || !flood) return;
 
-  prev.addEventListener('click', () => navigateToCard(activeIndex - 1));
-  next.addEventListener('click', () => navigateToCard(activeIndex + 1));
+    gsap.set(statement, { autoAlpha: 0, y: 22 });
+    gsap.set(about, { autoAlpha: 0 });
+    gsap.set([wordmark, copy, plate, cta], { autoAlpha: 0, y: 16 });
+    gsap.set(photos, { autoAlpha: 0 });
+    gsap.set(photos[0], { x: -36 });
+    gsap.set(photos[1], { x: 36 });
+    gsap.set(plant, { autoAlpha: 0 });
+    gsap.set(pipe, { autoAlpha: 1, transformOrigin: '50% 50%', ...pipeState(pipeStartScale()) });
+    gsap.set(specBlocks, { autoAlpha: 0, y: 18 });
+    gsap.set(specBodiesRed, { autoAlpha: 1 });
+    gsap.set(specBodiesInk, { autoAlpha: 0 });
+    gsap.set(plantRed, { autoAlpha: 0 });
+    gsap.set(flood, { yPercent: 100, autoAlpha: 1 });
 
-  if (reduced || !desktop) {
-    document.body.classList.add('reduced');
-    labels.forEach(el => el.classList.remove('is-active'));
-  } else {
-    gsap.registerPlugin(ScrollTrigger);
-    gsap.set(carousel, { autoAlpha: 0, scale: .94 });
-    gsap.set(root.querySelector('[data-nav]'), { autoAlpha: 0 });
-    update();
-
-    const entry = gsap.timeline({
+    const tl = gsap.timeline({
       scrollTrigger: {
         trigger: flow,
         start: 'top top',
-        end: () => '+=' + window.innerHeight,
+        end: () => '+=' + window.innerHeight * 8.8,
+        scrub: 1.15,
+        invalidateOnRefresh: true
+      }
+    });
+
+    window.__f3tl = tl;
+    tl
+      .to(statement, { autoAlpha: 1, y: 0, duration: .04 }, 0)
+      .to(statement, { autoAlpha: 0, duration: .04 }, .09)
+      .to(pipe, {
+        scale: () => pipeAboutScale(),
+        x: () => pipeState(pipeAboutScale()).x,
+        y: () => pipeState(pipeAboutScale()).y,
+        duration: .16,
+        ease: 'none'
+      }, .10)
+      .to(about, { autoAlpha: 1, duration: .05 }, .24)
+      .to(wordmark, { autoAlpha: 1, y: 0, duration: .05 }, .24)
+      .to(photos, { autoAlpha: 1, x: 0, duration: .07, stagger: .02, ease: 'power2.out' }, .25)
+      .to([copy, plate, cta], { autoAlpha: 1, y: 0, duration: .06, stagger: .02, ease: 'power2.out' }, .27)
+      .to({}, { duration: .19 })
+      .to(photos, { autoAlpha: 0, x: (i) => i ? 36 : -36, duration: .05, ease: 'power1.in' }, .50)
+      .to([wordmark, copy, plate, cta], { autoAlpha: 0, y: -28, duration: .05, ease: 'power1.in' }, .50)
+      .to(pipe, { rotation: 0, scale: 1, x: 0, y: 0, duration: .24, ease: 'power2.inOut' }, .52)
+      .to(about, { autoAlpha: 0, duration: .04 }, .54)
+      .to(plant, { autoAlpha: 1, duration: .03, ease: 'none' }, .76)
+      .to(pipe, { autoAlpha: 0, duration: .03 }, .78)
+      .to({}, { duration: .22 });
+
+    const refreshInit = () => {
+      if (tl.progress() < .10) gsap.set(pipe, pipeState(pipeStartScale()));
+    };
+    ScrollTrigger.addEventListener('refreshInit', refreshInit);
+
+    const contentTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: contentAnchor,
+        start: 'top top',
+        end: () => '+=' + window.innerHeight * .112,
         scrub: 1,
         invalidateOnRefresh: true
       }
     });
-    entry
-      .to(carousel, { autoAlpha: 1, scale: 1.2, duration: .75, ease: 'power2.out' }, .15)
-      .to(root.querySelector('[data-nav]'), { autoAlpha: 1, duration: .25 }, .6);
+    window.__f4content = contentTl;
+    contentTl.to(specBlocks, { autoAlpha: 1, y: 0, duration: .08, stagger: .015, ease: 'power2.out' }, 0);
 
-    const stepBase = () => stepAnchor.getBoundingClientRect().top + window.scrollY;
-    navigateToCard = (index) => {
-      const target = Math.max(0, Math.min(labels.length - 1, index));
-      const top = stepBase() + window.innerHeight * 2.8 * (target / (labels.length - 1));
-      window.scrollTo({ top, behavior: 'smooth' });
-    };
-
-    let currentIndex = 0;
-    const stepTo = (index) => {
-      currentIndex = index;
-      gsap.to(state, { rotation: -step * index, duration: .65, ease: 'power2.inOut', onUpdate: update });
-    };
-
-    ScrollTrigger.create({
-      trigger: stepAnchor,
-      start: 'top top',
-      end: () => '+=' + window.innerHeight * 2.8,
-      invalidateOnRefresh: true,
-      onUpdate: (self) => {
-        const index = Math.round(self.progress * (labels.length - 1));
-        if (index !== currentIndex) stepTo(index);
+    const colorTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: colorAnchor,
+        start: 'top top',
+        end: () => '+=' + window.innerHeight * 1.008,
+        scrub: 1.1,
+        invalidateOnRefresh: true
       }
     });
-  }
+    window.__f4color = colorTl;
+    colorTl
+      .to(plantRed, { autoAlpha: 1, duration: .14, ease: 'none' }, 0)
+      .to(plant, { autoAlpha: 0, duration: .14, ease: 'none' }, 0)
+      .to(specBodiesRed, { autoAlpha: 0, duration: .14, ease: 'none' }, 0)
+      .to(specBodiesInk, { autoAlpha: 1, duration: .14, ease: 'none' }, 0);
 
-  window.addEventListener('resize', update);
+    const specTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: specAnchor,
+        start: 'top top',
+        end: () => '+=' + window.innerHeight * 2.4,
+        scrub: 1.1,
+        invalidateOnRefresh: true
+      }
+    });
+    window.__f4spec = specTl;
+    specTl
+      .to(specBlocks, { autoAlpha: 0, y: -10, duration: .08, stagger: .01, ease: 'power1.in' }, .42)
+      .to(flood, { yPercent: 0, duration: .36, ease: 'none' }, .60)
+      .to({}, { duration: .04 });
 
-})();
-(() => {
-  const root = document.querySelector('#f6');
-
-  const grid = root.querySelector('[data-grid]');
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const desktop = window.matchMedia('(min-width: 768px)').matches;
-  const startWhite = .08;
-  const endWhite = .8;
-  const cells = [];
-  const thresholds = [];
-  let seed = 144;
-
-  const random = () => {
-    seed = (seed * 1664525 + 1013904223) >>> 0;
-    return seed / 4294967296;
-  };
-
-  for (let i = 0; i < 144; i++) {
-    thresholds.push({ i, t: random() });
-  }
-  thresholds.sort((a, b) => a.t - b.t).forEach((entry, order) => {
-    entry.order = order / 143;
+    return () => {
+      ScrollTrigger.removeEventListener('refreshInit', refreshInit);
+      window.__f3tl = undefined;
+      window.__f4content = undefined;
+      window.__f4color = undefined;
+      window.__f4spec = undefined;
+    };
   });
 
-  for (let i = 0; i < 144; i++) {
-    const cell = document.createElement('span');
-    cell.className = 'cell';
-    cell.dataset.order = thresholds.find(item => item.i === i).order;
-    grid.appendChild(cell);
-    cells.push(cell);
-  }
-
-  const setWhite = (target) => {
-    cells.forEach(cell => {
-      cell.classList.toggle('is-white', Number(cell.dataset.order) < target);
-    });
-  };
-
-  if (reduced || !desktop) {
-    document.body.classList.add('reduced');
-    setWhite(endWhite);
-  } else {
-    gsap.registerPlugin(ScrollTrigger);
-    setWhite(startWhite);
-    ScrollTrigger.create({
-      trigger: grid,
-      start: 'top 60%',
-      end: 'top 0%',
-      invalidateOnRefresh: true,
-      onUpdate: (self) => {
-        setWhite(startWhite + self.progress * (endWhite - startWhite));
+  // Debug de captura: ?static=1&p=0.32 (F3) · ?static=1&s=0.30 (F4)
+  const params = new URLSearchParams(location.search);
+  const debugP = Number(params.get('p'));
+  const debugS = Number(params.get('s'));
+  const staticPreview = params.get('static') === '1';
+  const hasP = Number.isFinite(debugP) && debugP > 0;
+  const hasS = params.has('s') && Number.isFinite(debugS);
+  if (staticPreview) document.body.classList.add('static-preview');
+  if (!reducedMedia.matches && window.matchMedia('(min-width: 768px)').matches && (hasP || hasS) && window.__f3tl) {
+    requestAnimationFrame(() => {
+      if (staticPreview) {
+        [window.__f3tl, window.__f4content, window.__f4color, window.__f4spec].forEach(tl => {
+          if (!tl) return;
+          tl.scrollTrigger?.kill();
+          tl.scrollTrigger = null;
+          tl.pause();
+        });
+      } else {
+        const y = hasS ? specAnchor.getBoundingClientRect().top + window.scrollY : flow.offsetTop;
+        window.scrollTo(0, y);
       }
+      const overall = hasS
+        ? Math.round((8.8 + Math.min(1, Math.max(0, debugS)) * 2.4) / 11.2 * 100)
+        : Math.round(Math.min(1, Math.max(0, debugP)) * 8.8 / 11.2 * 100);
+      if (hasS) window.__f3tl.progress(1).pause();
+      else window.__f3tl.progress(Math.min(1, Math.max(0, debugP))).pause();
+      if (window.__f4content) window.__f4content.progress(overall >= 70 ? 1 : 0).pause();
+      if (window.__f4color) window.__f4color.progress(Math.min(1, Math.max(0, (overall - 76) / 9))).pause();
+      if (window.__f4spec) window.__f4spec.progress(hasS ? Math.min(1, Math.max(0, debugS)) : 0).pause();
     });
   }
 
-})();
-</script>
+  (() => {
+    const root = document.querySelector('#f5');
+    if (!root) return;
 
+    const servicesFlow = root.querySelector('[data-flow]');
+    const carousel = root.querySelector('[data-carousel]');
+    const stepAnchor = root.querySelector('[data-step-anchor]');
+    const lines = root.querySelector('[data-lines]');
+    const labels = [...root.querySelectorAll('[data-label]')];
+    const prev = root.querySelector('[data-prev]');
+    const next = root.querySelector('[data-next]');
+    const nav = root.querySelector('[data-nav]');
+    const step = 360 / labels.length;
+    const state = { rotation: 0 };
+    let activeIndex = 0;
+
+    const update = () => {
+      const measured = labels.map((el, index) => {
+        const angle = 90 + index * step + state.rotation;
+        const dist = Math.abs((((angle - 90) % 360) + 540) % 360 - 180);
+        return { el, index, angle, dist };
+      });
+      activeIndex = measured.reduce((best, item) => item.dist < best.dist ? item : best, measured[0]).index;
+      measured.forEach(({ el, index, angle, dist }) => {
+        const isActive = index === activeIndex;
+        const isSide = dist < 90;
+        const radius = isActive ? 18.3 : 22.4;
+        const rad = angle * Math.PI / 180;
+        const x = 50 + Math.cos(rad) * radius;
+        let y = 0 + Math.sin(rad) * radius;
+        if (isSide && !isActive) y -= 2.8;
+        gsap.set(el, {
+          left: x + 'vw',
+          top: y + 'vw',
+          xPercent: -50,
+          yPercent: -50,
+          opacity: isActive ? 1 : isSide ? .82 : 0,
+          scale: isActive ? 1 : isSide ? .9 : .82,
+          zIndex: isActive ? 20 : isSide ? 10 : 0
+        });
+        el.classList.toggle('is-active', isActive);
+      });
+      gsap.set(lines, { rotation: state.rotation });
+      prev.disabled = activeIndex === 0;
+      next.disabled = activeIndex === labels.length - 1;
+    };
+
+    mm.add('(min-width: 768px) and (prefers-reduced-motion: no-preference)', () => {
+      if (!servicesFlow || !carousel || !stepAnchor || !nav) return;
+
+      state.rotation = 0;
+      gsap.set(carousel, { autoAlpha: 0, scale: .94 });
+      gsap.set(nav, { autoAlpha: 0 });
+      update();
+
+      const entry = gsap.timeline({
+        scrollTrigger: {
+          trigger: servicesFlow,
+          start: 'top top',
+          end: () => '+=' + window.innerHeight,
+          scrub: 1,
+          invalidateOnRefresh: true
+        }
+      });
+      entry
+        .to(carousel, { autoAlpha: 1, scale: 1.2, duration: .75, ease: 'power2.out' }, .15)
+        .to(nav, { autoAlpha: 1, duration: .25 }, .6);
+
+      const stepBase = () => stepAnchor.getBoundingClientRect().top + window.scrollY;
+      const onPrev = () => {
+        const target = Math.max(0, Math.min(labels.length - 1, activeIndex - 1));
+        const top = stepBase() + window.innerHeight * 2.8 * (target / (labels.length - 1));
+        window.scrollTo({ top, behavior: 'smooth' });
+      };
+      const onNext = () => {
+        const target = Math.max(0, Math.min(labels.length - 1, activeIndex + 1));
+        const top = stepBase() + window.innerHeight * 2.8 * (target / (labels.length - 1));
+        window.scrollTo({ top, behavior: 'smooth' });
+      };
+      prev.addEventListener('click', onPrev);
+      next.addEventListener('click', onNext);
+
+      let currentIndex = 0;
+      const stepTo = (index) => {
+        currentIndex = index;
+        gsap.to(state, { rotation: -step * index, duration: .65, ease: 'power2.inOut', onUpdate: update });
+      };
+
+      const stepTrigger = ScrollTrigger.create({
+        trigger: stepAnchor,
+        start: 'top top',
+        end: () => '+=' + window.innerHeight * 2.8,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          const index = Math.round(self.progress * (labels.length - 1));
+          if (index !== currentIndex) stepTo(index);
+        }
+      });
+
+      const onResize = () => update();
+      window.addEventListener('resize', onResize);
+
+      return () => {
+        window.removeEventListener('resize', onResize);
+        prev.removeEventListener('click', onPrev);
+        next.removeEventListener('click', onNext);
+        stepTrigger.kill();
+      };
+    });
+  })();
+
+  (() => {
+    const root = document.querySelector('#f6');
+    if (!root) return;
+
+    const grid = root.querySelector('[data-grid]');
+    const startWhite = .08;
+    const endWhite = .8;
+    const cells = [];
+    const thresholds = [];
+    let seed = 144;
+
+    const random = () => {
+      seed = (seed * 1664525 + 1013904223) >>> 0;
+      return seed / 4294967296;
+    };
+
+    for (let i = 0; i < 144; i++) {
+      thresholds.push({ i, t: random() });
+    }
+    thresholds.sort((a, b) => a.t - b.t).forEach((entry, order) => {
+      entry.order = order / 143;
+    });
+
+    for (let i = 0; i < 144; i++) {
+      const cell = document.createElement('span');
+      cell.className = 'cell';
+      cell.dataset.order = thresholds.find(item => item.i === i).order;
+      grid.appendChild(cell);
+      cells.push(cell);
+    }
+
+    const setWhite = (target) => {
+      cells.forEach(cell => {
+        cell.classList.toggle('is-white', Number(cell.dataset.order) < target);
+      });
+    };
+
+    mm.add('(min-width: 768px) and (prefers-reduced-motion: no-preference)', () => {
+      setWhite(startWhite);
+      const trigger = ScrollTrigger.create({
+        trigger: grid,
+        start: 'top 60%',
+        end: 'top 0%',
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          setWhite(startWhite + self.progress * (endWhite - startWhite));
+        }
+      });
+      return () => trigger.kill();
+    });
+
+    mm.add('(prefers-reduced-motion: reduce)', () => {
+      setWhite(endWhite);
+      return () => setWhite(0);
+    });
+  })();
+</script>

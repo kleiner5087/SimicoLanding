@@ -1,0 +1,480 @@
+---
+import about1 from '../assets/aboutus1.jpg';
+import about2 from '../assets/aboutus2.jpg';
+import { about, narrativeStatement, services, servicesTitle, specialties } from '../data/landing';
+
+const pixelCells: { order: number }[] = [];
+let seed = 42;
+const random = () => {
+  seed = (seed * 1664525 + 1013904223) >>> 0;
+  return seed / 4294967296;
+};
+const thresholds = Array.from({ length: 25 }, (_, index) => ({ index, threshold: random() }));
+thresholds.sort((a, b) => a.threshold - b.threshold);
+const orders = new Map<number, number>();
+thresholds.forEach((entry, index) => orders.set(entry.index, index / 24));
+for (let index = 0; index < 25; index++) {
+  pixelCells.push({ order: orders.get(index) ?? 0 });
+}
+---
+
+<div class="landing-mobile" data-landing-mobile data-narrative>
+  <section class="m-flow" data-m-flow aria-label="Secuencia móvil">
+    <div class="m-anchor m-anchor-about" data-mobile-anchor="about"></div>
+    <div class="m-anchor m-anchor-especialidades" data-mobile-anchor="especialidades"></div>
+
+    <div class="m-stage" data-m-stage>
+      <div class="m-plant refinery-mask" data-m-plant-gray aria-hidden="true"></div>
+      <div class="m-plant is-red refinery-mask" data-m-plant-red aria-hidden="true"></div>
+      <div class="m-veil" data-m-veil aria-hidden="true"></div>
+
+      <div class="m-statement" data-m-statement>
+        <div class="m-statement-copy">
+          <p class="m-statement-white" data-m-statement-white>{narrativeStatement.mobileWhite}</p>
+          <p class="m-statement-red" data-m-statement-red>
+            {narrativeStatement.mobileRedLines.map((line) => (
+              <span class="m-red-line" data-m-red-line>
+                <span class="m-red-text">{line}</span>
+                <span class="m-line-white" aria-hidden="true">{line}</span>
+              </span>
+            ))}
+          </p>
+        </div>
+      </div>
+
+      <div class="m-photo" data-m-photo>
+        <img src={about1.src} alt="Operación nocturna de SIMICO con personal en campo" loading="lazy">
+      </div>
+
+      <a class="m-photo-vertical" data-m-photo-vertical href={about.cta.href} aria-label={about.cta.label}>
+        <img src={about2.src} alt="Izaje de equipo industrial por personal de SIMICO" loading="lazy">
+        <span class="m-photo-shade" aria-hidden="true"></span>
+        <span class="m-about-cta" data-m-about-cta>
+          {about.cta.lines.map((line) => <span>{line}</span>)}
+        </span>
+      </a>
+
+      <div class="m-about-copy" data-m-about-copy>
+        <p>{about.copy}</p>
+      </div>
+
+      <div class="m-specials" data-m-specials>
+        <h2>Nuestras 3<br>Especialidades</h2>
+        <div class="m-spec-track" data-m-spec-track>
+          {specialties.map((specialty) => (
+            <article class="m-spec-card" data-m-spec-card>
+              <span class="num">{specialty.number}</span>
+              <h3>{specialty.title}</h3>
+              <p>{specialty.body}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+
+      <div class="m-flood" data-m-flood aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <section class="m-services" data-m-services data-mobile-anchor="servicios" aria-label="Carrusel de servicios">
+    <div class="m-services-stage" data-m-services-stage>
+      <div class="m-services-disc" aria-hidden="true"></div>
+      <div class="m-sector-ring" data-m-sector-ring aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <div class="m-services-pill" aria-hidden="true"></div>
+      <h2 class="m-services-title">{servicesTitle.mobile}</h2>
+      <div class="m-svc-orbit">
+        {services.map((service) => (
+          <article class="m-svc" data-m-svc-label={service.name}>
+            <svg class="m-svc-icon" aria-hidden="true"><use href={`#${service.icon}`}/></svg>
+            <h3>{service.name}</h3>
+          </article>
+        ))}
+      </div>
+      <nav class="m-service-nav" aria-label="Navegación del carrusel de servicios">
+        <button type="button" data-m-service-prev><span aria-hidden="true">←</span> Anterior</button>
+        <button type="button" data-m-service-next>Siguiente <span aria-hidden="true">→</span></button>
+      </nav>
+    </div>
+  </section>
+
+  <div class="m-bridge" data-m-bridge aria-hidden="true">
+    <div class="m-pixel-grid" data-m-pixel-grid>
+      {pixelCells.map((cell) => <span class="m-pixel-cell" data-m-pixel-cell data-order={cell.order}></span>)}
+    </div>
+  </div>
+</div>
+
+<style>
+  .landing-mobile { display:none; }
+
+  /* Reduced móvil queda pendiente: con reduce se conserva el fallback anterior (body.reduced). */
+  @media (max-width:767px) and (prefers-reduced-motion: no-preference) {
+    .landing-mobile { position:relative; z-index:2; display:block; background:var(--paper); color:var(--ink); font-family:var(--sans); }
+
+    .m-flow { position:relative; height:1000dvh; background:var(--paper); }
+    .m-stage { position:sticky; z-index:2; top:0; height:100dvh; overflow:hidden; background:var(--paper); isolation:isolate; }
+    .m-stage::before { content:""; position:absolute; inset:0; z-index:0; background-image:linear-gradient(#23252908 1px,transparent 1px),linear-gradient(90deg,#23252908 1px,transparent 1px); background-size:44px 44px; pointer-events:none; }
+    .m-anchor { position:absolute; left:0; width:1px; height:1px; pointer-events:none; }
+    .m-anchor-about { top:513dvh; }
+    .m-anchor-especialidades { top:774dvh; }
+
+    .m-plant { position:absolute; z-index:1; top:8dvh; left:calc(50% - 80.55dvh); width:177.78dvh; height:100dvh; background:var(--gray); opacity:0; pointer-events:none; will-change:opacity; }
+    .m-plant.is-red { z-index:2; background:var(--red); opacity:0; }
+    .m-veil { position:absolute; z-index:3; inset:0; background:var(--ink); transform-origin:50% 50%; will-change:transform,opacity; }
+
+    .m-statement { position:absolute; z-index:5; inset:0; display:grid; padding:0 6vw; place-items:center; color:var(--paper); text-align:center; pointer-events:none; }
+    .m-statement-copy { max-width:90vw; text-align:center; }
+    .m-statement-white, .m-statement-red { margin:0; font:800 clamp(24px,7.6vw,34px)/1.08 var(--sans); letter-spacing:-.01em; }
+    .m-statement-white { max-width:70vw; margin:0 auto; color:var(--paper); will-change:opacity; }
+    .m-statement-red { width:100%; color:var(--red); will-change:transform; }
+    .m-red-line { position:relative; display:block; white-space:nowrap; }
+    .m-red-text { display:block; will-change:opacity; }
+    .m-line-white { position:absolute; inset:0; display:block; color:var(--paper); opacity:0; will-change:opacity; }
+    .m-red-line.is-white .m-red-text { opacity:0; }
+    .m-red-line.is-white .m-line-white { opacity:1; }
+
+    .m-photo { position:absolute; z-index:4; left:12vw; top:8dvh; width:76vw; height:20dvh; overflow:hidden; border:1px solid #23252966; border-radius:2.5vw; background:#1c1e21; pointer-events:none; will-change:transform; }
+    .m-photo img { display:block; width:100%; height:100%; object-fit:cover; object-position:center 35%; }
+    .m-photo-vertical { position:absolute; z-index:9; left:31vw; top:63.5dvh; display:block; width:38vw; height:30.5dvh; overflow:hidden; border:1px solid #23252966; border-radius:3vw; background:#1c1e21; cursor:pointer; pointer-events:auto; will-change:transform; }
+    .m-photo-vertical img { display:block; width:100%; height:100%; object-fit:cover; object-position:center 25%; }
+    .m-photo-shade { position:absolute; z-index:1; inset:0; background:linear-gradient(180deg,#2325291f,#2325298c); pointer-events:none; }
+    .m-about-cta { position:absolute; z-index:2; left:50%; top:50%; width:82%; transform:translate(-50%,-50%); color:var(--paper); font:700 clamp(9px,2.8vw,11px)/1.45 var(--mono); letter-spacing:.06em; text-align:center; pointer-events:none; will-change:transform,opacity; }
+    .m-about-cta span { display:block; }
+    .m-about-cta span:last-child { padding-bottom:4px; border-bottom:1px solid #fffef599; }
+
+    .m-about-copy { position:absolute; z-index:6; left:12vw; top:46dvh; width:76vw; color:var(--gray); font:400 clamp(10px,3.05vw,13px)/1.5 var(--mono); text-align:justify; pointer-events:none; will-change:transform,opacity; }
+    .m-about-copy p { margin:0; }
+
+    .m-specials { position:absolute; z-index:6; inset:0; opacity:0; pointer-events:none; will-change:transform,opacity; }
+    .m-specials h2 { position:absolute; left:5vw; top:4dvh; margin:0; color:var(--red); font:800 clamp(20px,6vw,28px)/1.06 var(--sans); letter-spacing:-.02em; }
+    .m-spec-track { position:absolute; left:0; top:40dvh; display:flex; gap:2vw; width:max-content; padding-left:10vw; pointer-events:auto; will-change:transform; }
+    .m-spec-card { width:80vw; min-height:26dvh; padding:4.5vw; border:1px solid #23252922; background:var(--paper); color:var(--ink); font:400 clamp(10px,3.05vw,13px)/1.4 var(--mono); }
+    .m-spec-card .num { display:block; margin-bottom:8px; color:var(--red); font:700 10px/1 var(--mono); letter-spacing:.08em; }
+    .m-spec-card h3 { margin:0 0 6px; font:800 clamp(18px,5.6vw,24px)/1.02 var(--sans); letter-spacing:-.02em; }
+    .m-spec-card p { margin:0; }
+
+    .m-flood { position:absolute; z-index:8; left:0; right:0; bottom:0; height:100%; background:var(--red); pointer-events:none; will-change:transform; }
+
+    .m-services { position:relative; height:520dvh; margin-top:-1px; overflow:visible; background:var(--red); color:var(--ink); }
+    .m-services-stage { position:sticky; z-index:3; top:0; height:100dvh; overflow:hidden; background:var(--red); isolation:isolate; will-change:transform,opacity; }
+    .m-services-disc { position:absolute; z-index:1; left:50%; top:0; width:168dvh; height:168dvh; border-radius:50%; background:var(--ring); transform:translate(-50%,-50%); }
+    .m-sector-ring { position:absolute; z-index:2; left:50%; top:0; width:0; height:0; will-change:transform; }
+    .m-sector-ring span { position:absolute; left:0; top:0; width:105dvh; height:1px; background:#23252988; transform-origin:left center; }
+    .m-sector-ring span:nth-child(1) { transform:rotate(0deg); }
+    .m-sector-ring span:nth-child(2) { transform:rotate(60deg); }
+    .m-sector-ring span:nth-child(3) { transform:rotate(120deg); }
+    .m-sector-ring span:nth-child(4) { transform:rotate(180deg); }
+    .m-sector-ring span:nth-child(5) { transform:rotate(240deg); }
+    .m-sector-ring span:nth-child(6) { transform:rotate(300deg); }
+    .m-services-pill { position:absolute; z-index:3; left:50%; top:-103dvh; width:230vw; height:140dvh; border-radius:50%; background:var(--red); transform:translateX(-50%); }
+    .m-services-title { position:absolute; z-index:4; left:50%; top:12.5dvh; margin:0; transform:translateX(-50%); color:#fff; font:800 clamp(24px,6.7vw,32px)/1 var(--sans); letter-spacing:.08em; text-align:center; white-space:nowrap; }
+    .m-svc-orbit { position:absolute; z-index:5; inset:0; pointer-events:none; }
+    .m-svc { position:absolute; z-index:1; left:50%; top:0; display:flex; width:76vw; transform:translate(-50%,-50%); flex-direction:column; align-items:center; color:var(--ink); text-align:center; opacity:0; pointer-events:none; will-change:transform,opacity; }
+    .m-svc-icon { width:30px; height:30px; opacity:.95; }
+    .m-svc h3 { max-width:76vw; margin:10dvh 0 0; font:800 clamp(14px,4.1vw,18px)/1.15 var(--sans); letter-spacing:-.01em; }
+    .m-svc.is-active { opacity:1; }
+    .m-service-nav { position:absolute; z-index:6; left:6vw; right:6vw; bottom:4.5dvh; display:flex; justify-content:space-between; color:var(--paper); font:700 clamp(9px,2.6vw,11px)/1 var(--mono); letter-spacing:.04em; text-transform:uppercase; }
+    .m-service-nav button { border:0; padding:12px 0; background:transparent; color:inherit; font:inherit; cursor:pointer; }
+    .m-service-nav button:disabled { cursor:default; opacity:.32; }
+
+    .m-bridge { position:relative; height:100vw; overflow:hidden; background:var(--red); --paper:#f8f9fa; }
+    .m-pixel-grid { position:absolute; z-index:2; inset:0; display:grid; background:var(--red); grid-template-columns:repeat(5,1fr); grid-template-rows:repeat(5,1fr); }
+    .m-pixel-cell { position:relative; display:block; overflow:hidden; background:var(--red); }
+    .m-pixel-cell::before { content:""; position:absolute; inset:0; background:var(--paper); opacity:0; transform:scale(.7); transition:opacity .3s ease,transform .3s ease; }
+    .m-pixel-cell.is-white::before { opacity:1; transform:scale(1); }
+  }
+</style>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const root = document.querySelector('[data-landing-mobile]');
+
+  if (root) {
+    const flow = root.querySelector('[data-m-flow]');
+    const stage = root.querySelector('[data-m-stage]');
+    const statement = root.querySelector('[data-m-statement]');
+    const statementWhite = root.querySelector('[data-m-statement-white]');
+    const statementRed = root.querySelector('[data-m-statement-red]');
+    const redLines = [...root.querySelectorAll('[data-m-red-line]')];
+    const photo = root.querySelector('[data-m-photo]');
+    const photoVertical = root.querySelector('[data-m-photo-vertical]');
+    const aboutCopy = root.querySelector('[data-m-about-copy]');
+    const aboutCta = root.querySelector('[data-m-about-cta]');
+    const plantGray = root.querySelector('[data-m-plant-gray]');
+    const plantRed = root.querySelector('[data-m-plant-red]');
+    const veil = root.querySelector('[data-m-veil]');
+    const specials = root.querySelector('[data-m-specials]');
+    const specTrack = root.querySelector('[data-m-spec-track]');
+    const flood = root.querySelector('[data-m-flood]');
+    const servicesSection = root.querySelector('[data-m-services]');
+    const servicesStage = root.querySelector('[data-m-services-stage]');
+    const sectorRing = root.querySelector('[data-m-sector-ring]');
+    const serviceLabels = [...root.querySelectorAll('[data-m-svc-label]')];
+    const servicePrev = root.querySelector('[data-m-service-prev]');
+    const serviceNext = root.querySelector('[data-m-service-next]');
+    const pixelGrid = root.querySelector('[data-m-pixel-grid]');
+    const pixelCells = [...root.querySelectorAll('[data-m-pixel-cell]')];
+
+    const media = gsap.matchMedia();
+
+    media.add('(max-width: 767px) and (prefers-reduced-motion: no-preference)', () => {
+      if (!flow || !stage || !statement || !statementWhite || !statementRed || !photo || !photoVertical || !veil || !specials || !specTrack || !flood) return;
+
+      const P = {
+        statementIn: 0,
+        statementOut: .07,
+        photo1: .16,
+        photo2End: .44,
+        aboutIn: .48,
+        aboutOut: .62,
+        photosOut: .64,
+        shrink: .66,
+        plantIn: .8,
+        veilOut: .82,
+        specialsIn: .81,
+        color: .84,
+        colorEnd: .96,
+        specCard: .9,
+        flood: .97,
+        floodEnd: .995,
+      };
+
+      const startPhotoOffset = () => window.innerHeight * .92;
+      let redOffset = 0;
+      let specIndex = 0;
+
+      const setRedOffset = () => {
+        const whiteHeight = statementWhite.getBoundingClientRect().height;
+        redOffset = -window.innerHeight * .05 - whiteHeight / 2;
+      };
+
+      const updateWhiteLines = () => {
+        const photoRect = photo.getBoundingClientRect();
+        redLines.forEach((line) => {
+          const rect = line.getBoundingClientRect();
+          const center = rect.top + rect.height / 2;
+          line.classList.toggle('is-white', photoRect.top < center && photoRect.bottom > center);
+        });
+      };
+
+      setRedOffset();
+      gsap.set(statement, { autoAlpha: 0, y: 22 });
+      gsap.set([photo, photoVertical], { y: startPhotoOffset() });
+      gsap.set(aboutCopy, { autoAlpha: 0, y: 18 });
+      gsap.set(aboutCta, { autoAlpha: 0 });
+      gsap.set([plantGray, plantRed], { autoAlpha: 0 });
+      gsap.set(specials, { autoAlpha: 0, y: 16 });
+      gsap.set(flood, { yPercent: 100 });
+
+      const timeline = gsap.timeline({
+        defaults: { ease: 'none' },
+        scrollTrigger: {
+          trigger: flow,
+          start: 'top top',
+          end: 'bottom bottom',
+          scrub: .7,
+          invalidateOnRefresh: true,
+          onRefreshInit: () => {
+            setRedOffset();
+            if (timeline.progress() < P.photo1) {
+              gsap.set([photo, photoVertical], { y: startPhotoOffset() });
+            }
+          },
+          onRefresh: () => updateWhiteLines(),
+          onUpdate: (self) => {
+            const progress = self.progress;
+            stage.classList.toggle('is-specialties', progress >= P.specialsIn && progress < P.flood);
+            if (progress >= P.color && progress < P.flood) {
+              specIndex = Math.max(0, Math.min(2, Math.round((progress - P.color) / .06)));
+            }
+            updateWhiteLines();
+          },
+        },
+      });
+
+      timeline
+        .to(statement, { autoAlpha: 1, y: 0, duration: .03 }, P.statementIn)
+        .to(statementWhite, { autoAlpha: 0, duration: .05, ease: 'power1.inOut' }, P.statementOut)
+        .to(statementRed, { y: () => redOffset, duration: .09, ease: 'power1.inOut' }, P.statementOut)
+        .to([photo, photoVertical], { y: 0, duration: P.photo2End - P.photo1, ease: 'power2.out', onUpdate: updateWhiteLines }, P.photo1)
+        .to(statementRed, { y: () => redOffset - window.innerHeight * .08, duration: .07, ease: 'power1.inOut' }, P.aboutIn)
+        .to(aboutCopy, { autoAlpha: 1, y: 0, duration: .05 }, P.aboutIn)
+        .to(aboutCta, { autoAlpha: 1, duration: .04 }, P.aboutIn + .02)
+        .to(statementRed, { autoAlpha: 0, duration: .03 }, P.aboutOut)
+        .to(aboutCopy, { autoAlpha: 0, y: -14, duration: .03 }, P.aboutOut)
+        .to(aboutCta, { autoAlpha: 0, duration: .03 }, P.aboutOut)
+        .to([photo, photoVertical], { autoAlpha: 0, duration: .03 }, P.photosOut)
+        .to(veil, { scaleY: .5, duration: .09, ease: 'power1.inOut' }, P.shrink)
+        .to(veil, { scaleY: .2, y: () => window.innerHeight * .4, duration: .05, ease: 'power2.in' }, .75)
+        .to(plantGray, { autoAlpha: 1, duration: .03 }, P.plantIn)
+        .to(veil, { autoAlpha: 0, duration: .03 }, P.veilOut)
+        .to(specials, { autoAlpha: 1, y: 0, duration: .03 }, P.specialsIn)
+        .to(specTrack, { x: () => -window.innerWidth * .82, duration: .06, ease: 'power1.inOut' }, P.color)
+        .to(specTrack, { x: () => -window.innerWidth * 1.64, duration: .06, ease: 'power1.inOut' }, P.specCard)
+        .to(plantRed, { autoAlpha: 1, duration: P.colorEnd - P.color, ease: 'none' }, P.color)
+        .to(plantGray, { autoAlpha: 0, duration: P.colorEnd - P.color, ease: 'none' }, P.color)
+        .to(flood, { yPercent: 0, duration: P.floodEnd - P.flood, ease: 'none' }, P.flood)
+        .to({}, { duration: .005 }, P.floodEnd);
+
+      const goSpecStep = (index) => {
+        if (!flow) return;
+        const target = Math.max(0, Math.min(2, index));
+        const top = flow.getBoundingClientRect().top + window.scrollY + (flow.offsetHeight - window.innerHeight) * (P.color + target * .06);
+        window.scrollTo({ top, behavior: 'smooth' });
+      };
+
+      let specTouch = null;
+      const onSpecTouchStart = (event) => {
+        if (!stage.classList.contains('is-specialties') || !event.touches[0]) return;
+        specTouch = { x: event.touches[0].clientX, y: event.touches[0].clientY };
+      };
+      const onSpecTouchEnd = (event) => {
+        if (!stage.classList.contains('is-specialties') || !specTouch || !event.changedTouches[0]) return;
+        const dx = event.changedTouches[0].clientX - specTouch.x;
+        const dy = event.changedTouches[0].clientY - specTouch.y;
+        specTouch = null;
+        if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.2) goSpecStep(specIndex + (dx < 0 ? 1 : -1));
+      };
+      stage.addEventListener('touchstart', onSpecTouchStart, { passive: true });
+      stage.addEventListener('touchend', onSpecTouchEnd, { passive: true });
+
+      const layoutServices = (rotation) => {
+        if (!servicesSection || !sectorRing || !serviceLabels.length) return;
+        const radius = window.innerHeight * .58;
+        const active = Math.max(0, Math.min(serviceLabels.length - 1, Math.round(-rotation / (360 / serviceLabels.length))));
+        serviceLabels.forEach((label, index) => {
+          const angle = (90 + index * (360 / serviceLabels.length) + rotation) * Math.PI / 180;
+          gsap.set(label, {
+            x: Math.cos(angle) * radius,
+            y: Math.sin(angle) * radius,
+            xPercent: -50,
+            yPercent: -50,
+            opacity: index === active ? 1 : 0,
+            zIndex: index === active ? 20 : 1,
+          });
+          label.classList.toggle('is-active', index === active);
+        });
+        gsap.set(sectorRing, { rotation });
+        if (servicePrev) servicePrev.disabled = active === 0;
+        if (serviceNext) serviceNext.disabled = active === serviceLabels.length - 1;
+      };
+
+      const serviceState = { rotation: 0 };
+      let serviceIndex = 0;
+      let serviceTargetIndex = 0;
+      let serviceTrigger = null;
+      const serviceRange = () => Math.max(1, (servicesSection?.offsetHeight ?? window.innerHeight) - window.innerHeight);
+
+      const goServiceStep = (index) => {
+        if (!servicesSection) return;
+        const target = Math.max(0, Math.min(serviceLabels.length - 1, index));
+        const progress = .2 + .75 * (target / (serviceLabels.length - 1));
+        window.scrollTo({
+          top: servicesSection.getBoundingClientRect().top + window.scrollY + serviceRange() * progress,
+          behavior: 'smooth',
+        });
+      };
+
+      const onServicePrev = () => goServiceStep(serviceIndex - 1);
+      const onServiceNext = () => goServiceStep(serviceIndex + 1);
+      servicePrev?.addEventListener('click', onServicePrev);
+      serviceNext?.addEventListener('click', onServiceNext);
+
+      let serviceTouch = null;
+      const onServiceTouchStart = (event) => {
+        if (!event.touches[0]) return;
+        serviceTouch = { x: event.touches[0].clientX, y: event.touches[0].clientY };
+      };
+      const onServiceTouchEnd = (event) => {
+        if (!serviceTouch || !event.changedTouches[0]) return;
+        const dx = event.changedTouches[0].clientX - serviceTouch.x;
+        const dy = event.changedTouches[0].clientY - serviceTouch.y;
+        serviceTouch = null;
+        if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.2) goServiceStep(serviceIndex + (dx < 0 ? 1 : -1));
+      };
+
+      const updateServicesStage = (progress) => {
+        if (!servicesStage) return;
+        const entry = Math.min(1, Math.max(0, progress / .2));
+        gsap.set(servicesStage, {
+          y: (1 - entry) * -window.innerHeight,
+          opacity: progress > .0001 ? 1 : 0,
+        });
+        const t = Math.min(1, Math.max(0, (progress - .2) / .75));
+        const rawIndex = Math.round(t * (serviceLabels.length - 1));
+        const target = Math.max(0, Math.min(serviceLabels.length - 1, rawIndex));
+        if (target !== serviceTargetIndex) {
+          serviceTargetIndex = target;
+          serviceIndex = target;
+          gsap.to(serviceState, {
+            rotation: -(360 / serviceLabels.length) * target,
+            duration: 1.15,
+            ease: 'power2.out',
+            overwrite: true,
+            onUpdate: () => layoutServices(serviceState.rotation),
+            onComplete: () => layoutServices(serviceState.rotation),
+          });
+        }
+      };
+
+      if (servicesStage && servicesSection && sectorRing && serviceLabels.length) {
+        layoutServices(0);
+        gsap.set(servicesStage, { y: () => -window.innerHeight, opacity: 0 });
+        servicesStage.addEventListener('touchstart', onServiceTouchStart, { passive: true });
+        servicesStage.addEventListener('touchend', onServiceTouchEnd, { passive: true });
+
+        serviceTrigger = ScrollTrigger.create({
+          trigger: servicesSection,
+          start: 'top top',
+          end: 'bottom bottom',
+          invalidateOnRefresh: true,
+          onRefresh: (self) => {
+            layoutServices(serviceState.rotation);
+            updateServicesStage(self.progress);
+          },
+          onUpdate: (self) => updateServicesStage(self.progress),
+        });
+        updateServicesStage(serviceTrigger.progress);
+      }
+
+      let pixelTrigger = null;
+      if (pixelGrid && pixelCells.length) {
+        const setWhite = (target) => {
+          pixelCells.forEach((cell) => {
+            cell.classList.toggle('is-white', Number(cell.dataset.order) < target);
+          });
+        };
+        const setPixelProgress = (progress) => setWhite(.08 + progress * .8);
+        setWhite(.08);
+        pixelTrigger = ScrollTrigger.create({
+          trigger: pixelGrid,
+          start: 'top 85%',
+          end: 'top 0%',
+          invalidateOnRefresh: true,
+          onRefresh: (self) => setPixelProgress(self.progress),
+          onUpdate: (self) => setPixelProgress(self.progress),
+        });
+        setPixelProgress(pixelTrigger.progress);
+      }
+
+      return () => {
+        stage.removeEventListener('touchstart', onSpecTouchStart);
+        stage.removeEventListener('touchend', onSpecTouchEnd);
+        servicePrev?.removeEventListener('click', onServicePrev);
+        serviceNext?.removeEventListener('click', onServiceNext);
+        servicesStage?.removeEventListener('touchstart', onServiceTouchStart);
+        servicesStage?.removeEventListener('touchend', onServiceTouchEnd);
+        serviceTrigger?.kill();
+        pixelTrigger?.kill();
+        stage.classList.remove('is-specialties');
+        redLines.forEach((line) => line.classList.remove('is-white'));
+        pixelCells.forEach((cell) => cell.classList.remove('is-white'));
+      };
+    });
+  }
+</script>

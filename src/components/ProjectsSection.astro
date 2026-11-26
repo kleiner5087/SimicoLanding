@@ -1,12 +1,7 @@
 ---
 import ProjectSlide from './ProjectSlide.astro';
-
-const projects = [
-  { title: 'Infraestructura Energética Norte', description: 'Diseñamos y ejecutamos infraestructura energética con ingeniería civil y montaje electromecánico de alta precisión. Cada etapa se desarrolla bajo estándares de seguridad ISO para asegurar continuidad operativa.', image: 'https://images.unsplash.com/photo-1513828583688-c52646db42da?auto=format&fit=crop&w=1400&q=85', link: '/proyectos/infraestructura-energetica-norte' },
-  { title: 'Mantenimiento de Ductos', description: 'Inspeccionamos y rehabilitamos ductos críticos para extender su vida útil y reducir riesgos operativos. El proyecto integra soldadura de alta presión, control técnico y renovación de válvulas.', image: 'https://images.unsplash.com/photo-1545235617-9465d2a55698?auto=format&fit=crop&w=1400&q=85', link: '/proyectos/mantenimiento-ductos' },
-  { title: 'Planta de Procesamiento', description: 'Integramos diseño estructural, instalación de tuberías y puesta en marcha para una planta lista para operar. La coordinación de cada especialidad permite avanzar con precisión y seguridad.', image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1400&q=85', link: '/proyectos/planta-procesamiento' },
-  { title: 'Expansión Industrial', description: 'Supervisamos la expansión de instalaciones industriales para mejorar su capacidad y desempeño. El trabajo combina optimización operativa, control de calidad y seguimiento cercano de obra.', image: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1400&q=85', link: '/proyectos/expansion-industrial' },
-];
+import { projectsStatement } from '../data/landing';
+import { landingProjects } from '../data/landingProjects';
 ---
 
 <section id="proyectos" class="projects-new" data-projects-timeline aria-labelledby="projects-new-heading">
@@ -18,12 +13,12 @@ const projects = [
       <path class="trajectory trajectory-muted" d="M-80 488 C218 340 490 574 772 426 S1130 262 1520 430" />
     </svg>
     <div class="projects-statement" data-project-statement>
-      <p>CAPACIDAD OPERATIVA COMPROBADA</p>
-      <h2 id="projects-new-heading">Ingeniería que impulsa el sector petrolero.</h2>
-      <span>Soluciones y ejecución precisa para infraestructura crítica en el sur de México.</span>
+      <p>{projectsStatement.kicker}</p>
+      <h2 id="projects-new-heading">{projectsStatement.heading}</h2>
+      <span>{projectsStatement.lead}</span>
     </div>
     <div class="projects-track" data-project-track>
-      {projects.map((project, index) => <ProjectSlide project={project} index={index} />)}
+      {landingProjects.map((project, index) => <ProjectSlide project={project} index={index} />)}
       <article class="projects-end-card">
         <p>SIMICO / PROYECTOS</p>
         <h3>Construyamos el siguiente desafío.</h3>
@@ -42,6 +37,7 @@ const projects = [
   const frame = document.querySelector('[data-project-frame]');
   const statement = document.querySelector('[data-project-statement]');
   const track = document.querySelector('[data-project-track]');
+  const statementHome = statement?.parentElement ?? null;
   const paths = gsap.utils.toArray('.trajectory');
   const media = gsap.matchMedia();
 
@@ -68,5 +64,28 @@ const projects = [
       .to(paths, { strokeDashoffset: 0, duration: 0.25, stagger: 0.05 }, '<')
       .to(track, { x: () => -(track.scrollWidth - window.innerWidth + 56), duration: 0.58, ease: 'none' })
       .to('.projects-end-card', { scale: 1, duration: 0.1 }, '<0.35');
+  });
+
+  media.add('(max-width: 767px) and (prefers-reduced-motion: no-preference)', () => {
+    if (!section || !statement || !track || !statementHome) return;
+    track.prepend(statement);
+    gsap.set(track, { x: 0 });
+
+    const timeline = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 1,
+        invalidateOnRefresh: true,
+      },
+    });
+    timeline.to(track, { x: () => -(track.scrollWidth - window.innerWidth), duration: 1, ease: 'none' }, 0);
+
+    return () => {
+      timeline.scrollTrigger?.kill();
+      statementHome.insertBefore(statement, track);
+      gsap.set(track, { clearProps: 'transform' });
+    };
   });
 </script>

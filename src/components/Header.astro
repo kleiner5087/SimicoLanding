@@ -30,7 +30,7 @@ const cta = { label: 'Contacto', href: '/#contacto' };
 <script>
   const header = document.querySelector('[data-header]');
   const hero = document.querySelector('#inicio');
-  const narrative = document.querySelector('[data-narrative]');
+  const narratives = [...document.querySelectorAll('[data-narrative]')];
   const projects = document.querySelector('[data-projects-timeline]');
   const toggle = document.querySelector('[data-menu-toggle]');
   const nav = document.querySelector('[data-navigation]');
@@ -55,6 +55,7 @@ const cta = { label: 'Contacto', href: '/#contacto' };
     }
 
     const inHero = Boolean(hero && currentScrollY < (hero.offsetHeight ?? 0) - 2);
+    const narrative = narratives.find((element) => element.getClientRects().length > 0);
     const narrativeRect = narrative?.getBoundingClientRect();
     const inNarrative = Boolean(narrativeRect && narrativeRect.top < window.innerHeight && narrativeRect.bottom > 0);
     const projectsRect = projects?.getBoundingClientRect();
@@ -82,4 +83,9 @@ const cta = { label: 'Contacto', href: '/#contacto' };
     toggle.setAttribute('aria-expanded', String(open));
     document.body.classList.toggle('menu-open', open);
   });
+  nav?.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => {
+    nav.classList.remove('open');
+    toggle?.setAttribute('aria-expanded', 'false');
+    document.body.classList.remove('menu-open');
+  }));
 </script>

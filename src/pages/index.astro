@@ -2,10 +2,48 @@
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Hero from '../components/Hero.astro';
+import ServicesIconSprite from '../components/ServicesIconSprite.astro';
 import LandingSequence from '../components/LandingSequence.astro';
+import LandingSequenceMobile from '../components/LandingSequenceMobile.astro';
 import ProjectsSection from '../components/ProjectsSection.astro';
 import CTASection from '../components/CTASection.astro';
 import Contact from '../components/Contact.astro';
 import Footer from '../components/Footer.astro';
 ---
-<Layout title="SIMICO | Soluciones técnicas e industriales"><Header /><Hero /><LandingSequence /><ProjectsSection /><div data-cta-contact-wrap><CTASection /><Contact /></div><Footer /></Layout>
+<Layout title="SIMICO | Soluciones técnicas e industriales">
+  <Header />
+  <ServicesIconSprite />
+  <div class="hero-stack">
+    <Hero />
+    <LandingSequence />
+    <LandingSequenceMobile />
+  </div>
+  <ProjectsSection />
+  <div data-cta-contact-wrap><CTASection /><Contact /></div>
+  <Footer />
+</Layout>
+
+<script is:inline>
+  (() => {
+    const mobileExperience = window.matchMedia('(max-width: 767px) and (prefers-reduced-motion: no-preference)');
+    const anchors = [...document.querySelectorAll('[data-desktop-anchor], [data-mobile-anchor]')];
+    const syncAnchors = () => {
+      anchors.forEach((anchor) => {
+        const name = mobileExperience.matches ? anchor.dataset.mobileAnchor : anchor.dataset.desktopAnchor;
+        if (name) anchor.id = name;
+        else anchor.removeAttribute('id');
+      });
+      if (location.hash) {
+        let target = null;
+        try {
+          target = document.querySelector(location.hash);
+        } catch {
+          target = null;
+        }
+        if (target) requestAnimationFrame(() => target.scrollIntoView({ block: 'start' }));
+      }
+    };
+    syncAnchors();
+    mobileExperience.addEventListener('change', syncAnchors);
+  })();
+</script>
